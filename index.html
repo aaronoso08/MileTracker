@@ -25,6 +25,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
 
+/* TOPBAR */
 .topbar{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-mid) 60%,var(--brand-light) 100%);
   color:#fff;padding:env(safe-area-inset-top,0px) 16px 0;min-height:56px;display:flex;align-items:center;
   justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.25);position:sticky;top:0;z-index:50}
@@ -35,6 +36,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .topbar-sub{font-size:.62rem;opacity:.65;margin-top:1px}
 .topbar-actions{display:flex;gap:6px;align-items:center}
 
+/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;
   border:none;cursor:pointer;font-size:.8rem;font-weight:600;transition:all .15s;font-family:inherit;white-space:nowrap;touch-action:manipulation}
 .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#d46b1a}
@@ -45,6 +47,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-xs{padding:5px 9px;font-size:.69rem}
 .btn-icon{width:36px;height:36px;padding:0;justify-content:center;border-radius:8px}
 
+/* STATS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px 16px 0;max-width:960px;margin:0 auto}
 .stat-card{background:var(--surface);border-radius:var(--rl);padding:14px;border:1.5px solid var(--border);box-shadow:var(--sh-sm)}
 .stat-icon-wrap{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
@@ -54,6 +57,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .stat-num{font-size:1.7rem;font-weight:800;color:var(--text);line-height:1}
 .stat-label{font-size:.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
 
+/* MAIN */
 .main-area{max-width:960px;margin:0 auto;padding:16px 16px 100px}
 .toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .search-wrap{flex:1;position:relative;min-width:180px}
@@ -61,13 +65,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   border-radius:var(--r);font-size:.83rem;outline:none;background:var(--surface);font-family:inherit;color:var(--text)}
 .search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,122,42,.12)}
 .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3)}
-
 .pills{display:flex;gap:5px;flex-wrap:wrap}
 .pill{padding:7px 11px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);
   font-size:.72rem;cursor:pointer;font-weight:600;color:var(--text2);transition:all .15s;font-family:inherit}
 .pill:hover{border-color:var(--accent);color:var(--brand)}
 .pill.active{background:var(--brand);color:#fff;border-color:var(--brand)}
 
+/* TRIP ROWS */
 .trip-list{display:flex;flex-direction:column;gap:8px}
 .trip-row{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);
   padding:12px 14px;display:flex;align-items:center;gap:12px;transition:all .18s;position:relative;overflow:hidden}
@@ -77,13 +81,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .trip-row.purpose-charity::before{background:var(--green)}
 .trip-row.purpose-other::before{background:var(--gray)}
 .trip-row:hover{border-color:var(--accent);box-shadow:var(--sh)}
-
 .date-badge{width:50px;min-width:50px;height:54px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
 .db-purpose-business{background:var(--accent)}.db-purpose-medical{background:var(--blue)}
 .db-purpose-charity{background:var(--green)}.db-purpose-other{background:var(--gray)}
 .db-mon{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
 .db-day{font-size:1.35rem;font-weight:800;line-height:1}
-
 .trip-info{flex:1;min-width:0}
 .trip-name{font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:2px}
 .trip-route{font-size:.72rem;color:var(--text3);display:flex;align-items:center;gap:4px;margin-top:3px;flex-wrap:wrap}
@@ -91,17 +93,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .trip-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .miles-badge{font-family:'DM Mono',monospace;font-weight:500;font-size:.85rem;color:var(--brand);
   background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;white-space:nowrap}
-
 .badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:99px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .badge-business{background:var(--yellow-bg);color:var(--yellow-dark)}.badge-medical{background:var(--blue-bg);color:var(--blue)}
 .badge-charity{background:var(--green-bg);color:var(--green-dark)}.badge-other{background:var(--gray-bg);color:var(--gray)}
 
+/* FAB */
 .fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;
   background:var(--accent);color:#fff;border:none;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 4px 20px rgba(232,122,42,.45);transition:all .18s;z-index:40}
 .fab:hover{background:#d46b1a;transform:scale(1.06)}
 
+/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.open{opacity:1;pointer-events:all}
 .modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:640px;
@@ -109,7 +112,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .overlay.open .modal{transform:translateY(0)}
 .modal-handle{width:40px;height:4px;background:var(--border-dark);border-radius:99px;margin:0 auto 20px}
 .modal-title{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:18px}
-
 .form-group{margin-bottom:14px}
 .form-label{font-size:.75rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:block}
 .form-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r);
@@ -117,8 +119,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,122,42,.12)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
+/* PURPOSE BUTTONS */
 .purpose-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.purpose-btn{padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);
+.purpose-btn{padding:11px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);
   cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:600;color:var(--text2);
   display:flex;align-items:center;gap:8px;transition:all .15s;text-align:left}
 .purpose-btn:hover{border-color:var(--accent)}
@@ -128,18 +131,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .purpose-btn.sel-other{background:var(--gray-bg);border-color:var(--gray);color:var(--gray)}
 .purpose-btn svg{width:15px;height:15px;flex-shrink:0}
 
-.dist-status{font-size:.72rem;display:flex;align-items:center;gap:5px;margin-top:6px;min-height:18px;transition:all .2s}
-.dist-status.loading{color:var(--text3)}.dist-status.ok{color:var(--green)}.dist-status.err{color:var(--red)}
-.dist-spinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+/* AUTOCOMPLETE DROPDOWN */
+.ac-wrap{position:relative}
+.ac-drop{position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--surface);
+  border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--sh-lg);z-index:100;
+  max-height:220px;overflow-y:auto;display:none}
+.ac-drop.open{display:block}
+.ac-item{padding:10px 14px;cursor:pointer;font-size:.83rem;color:var(--text2);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;transition:background .1s}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover,.ac-item.focused{background:var(--surface2)}
+.ac-item svg{width:13px;height:13px;flex-shrink:0;color:var(--text3);margin-top:2px}
+.ac-item-text{flex:1;min-width:0}
+.ac-item-main{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac-item-sub{font-size:.7rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac-loading{padding:12px 14px;font-size:.8rem;color:var(--text3);display:flex;align-items:center;gap:8px}
+.ac-spinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* DISTANCE STATUS */
+.dist-status{font-size:.72rem;display:flex;align-items:center;gap:5px;margin-top:6px;min-height:18px}
+.dist-status.loading{color:var(--text3)}.dist-status.ok{color:var(--green)}.dist-status.err{color:var(--red-dark)}
+
+/* INFO BANNER */
 .info-banner{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;
-  display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:.75rem;color:var(--text2)}
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:.75rem;color:var(--text2);flex-wrap:wrap}
 .info-banner svg{width:14px;height:14px;flex-shrink:0;color:var(--accent)}
 
 .modal-footer{display:flex;gap:10px;margin-top:20px}
 .modal-footer .btn{flex:1;justify-content:center}
 
+/* REPORT */
 .report-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.78rem}
 .report-table th{background:var(--brand);color:#fff;padding:8px 10px;text-align:left;font-size:.69rem;text-transform:uppercase;letter-spacing:.05em}
 .report-table td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
@@ -148,6 +169,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .report-total{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;
   background:var(--brand);color:#fff;border-radius:10px;margin-top:12px;font-weight:700}
 
+/* EMPTY */
 .empty{text-align:center;padding:48px 20px;color:var(--text3)}
 .empty-icon{width:56px;height:56px;border-radius:16px;background:var(--surface2);border:1.5px solid var(--border);
   display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
@@ -159,6 +181,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   letter-spacing:.08em;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
 .month-header::after{content:'';flex:1;height:1px;background:var(--border)}
 
+/* SETUP */
 .setup-screen{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
 .setup-card{background:var(--surface);border-radius:20px;padding:32px 28px;max-width:400px;width:100%;box-shadow:var(--sh-lg);text-align:center}
 .setup-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--brand-light));
@@ -166,15 +189,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .setup-title{font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:6px}
 .setup-sub{font-size:.83rem;color:var(--text3);margin-bottom:24px;line-height:1.5}
 
+/* TOAST */
 .toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px);
   background:#1C1209;color:#fff;padding:10px 18px;border-radius:99px;font-size:.8rem;font-weight:600;
   box-shadow:var(--sh-lg);opacity:0;transition:all .25s;z-index:300;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* Google autocomplete styling */
-.pac-container{z-index:9999!important;border-radius:0 0 10px 10px!important;
-  font-family:'DM Sans',sans-serif!important;box-shadow:var(--sh)!important}
-.pac-item{padding:8px 14px!important;font-size:.83rem!important;cursor:pointer!important}
 
 @media(max-width:600px){
   .stats-row{grid-template-columns:repeat(2,1fr)}
@@ -186,7 +205,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </head>
 <body>
 
-<!-- SETUP (first time only) -->
+<!-- SETUP -->
 <div class="setup-screen" id="setup-screen">
   <div class="setup-card">
     <div class="setup-logo">
@@ -196,11 +215,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="setup-sub">Enter your name so your monthly reports are labeled correctly for submission.</div>
     <div class="form-group" style="text-align:left">
       <label class="form-label">Your Full Name</label>
-      <input type="text" class="form-input" id="setup-name" placeholder="e.g. Aaron Soto" style="font-size:1rem">
+      <input type="text" class="form-input" id="setup-name" placeholder="e.g. Aaron Soto" style="font-size:1rem" onkeydown="if(event.key==='Enter')completeSetup()">
     </div>
     <div class="form-group" style="text-align:left">
       <label class="form-label">Organization (optional)</label>
-      <input type="text" class="form-input" id="setup-org" placeholder="e.g. Latino Built">
+      <input type="text" class="form-input" id="setup-org" placeholder="e.g. Latino Built" onkeydown="if(event.key==='Enter')completeSetup()">
     </div>
     <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:.95rem;margin-top:4px" onclick="completeSetup()">Get Started</button>
   </div>
@@ -280,10 +299,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-title">Log a Trip</div>
 
-    <!-- IRS rate info -->
     <div class="info-banner">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>2026 IRS rates: <strong>Business 72.5¢/mi</strong> &bull; Medical 20.5¢/mi &bull; Charity 14¢/mi</span>
+      <span>2026 IRS rates: <strong>Business 72.5¢</strong> &bull; Medical 20.5¢ &bull; Charity 14¢ per mile</span>
     </div>
 
     <div class="form-group">
@@ -319,24 +337,35 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       </div>
     </div>
 
+    <!-- FROM with autocomplete -->
     <div class="form-group">
       <label class="form-label">From - Start Address</label>
-      <input type="text" class="form-input" id="f-from" placeholder="Start typing an address..." autocomplete="off" oninput="scheduleDist()">
+      <div class="ac-wrap">
+        <input type="text" class="form-input" id="f-from" placeholder="Start typing address..." autocomplete="off"
+          oninput="acSearch('from',this.value)" onkeydown="acKeydown(event,'from')">
+        <div class="ac-drop" id="ac-from"></div>
+      </div>
     </div>
 
+    <!-- TO with autocomplete -->
     <div class="form-group">
       <label class="form-label">To - Destination</label>
-      <input type="text" class="form-input" id="f-to" placeholder="Start typing an address..." autocomplete="off" oninput="scheduleDist()">
+      <div class="ac-wrap">
+        <input type="text" class="form-input" id="f-to" placeholder="Start typing address..." autocomplete="off"
+          oninput="acSearch('to',this.value)" onkeydown="acKeydown(event,'to')">
+        <div class="ac-drop" id="ac-to"></div>
+      </div>
       <div class="dist-status" id="dist-status"></div>
     </div>
 
+    <!-- MILES -->
     <div class="form-group">
       <label class="form-label">Miles Driven
-        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> (auto-filled from addresses above, or type manually)</span>
+        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> — auto-filled from addresses, or enter manually</span>
       </label>
       <div style="display:flex;gap:8px">
         <input type="number" class="form-input" id="f-miles" placeholder="e.g. 14.2" step="0.1" min="0" style="flex:1">
-        <button class="btn btn-outline btn-sm" onclick="calcDistance()" style="flex-shrink:0">
+        <button class="btn btn-outline btn-sm" onclick="calcDist()" style="flex-shrink:0" id="recalc-btn">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           Recalc
         </button>
@@ -348,11 +377,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <input type="text" class="form-input" id="f-notes" placeholder="e.g. Maria Garcia - home assessment">
     </div>
 
-    <div class="form-group">
+    <!-- SAVED LOCATIONS QUICK FILL -->
+    <div class="form-group" id="saved-loc-group">
       <label class="form-label">Quick-fill Saved Addresses
-        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> (tap to fill From or To)</span>
+        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> — tap to fill From or To</span>
       </label>
-      <div id="saved-locations-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
+      <div id="saved-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
     </div>
 
     <div class="modal-footer">
@@ -380,13 +410,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div class="form-group">
       <label class="form-label">Saved Addresses
-        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> (tap X to remove)</span>
+        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> — tap X to remove</span>
       </label>
       <div id="settings-saved-list" style="display:flex;flex-direction:column;gap:5px;margin-top:4px;max-height:180px;overflow-y:auto"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeSettings()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
     </div>
   </div>
 </div>
@@ -410,169 +440,274 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div id="report-month-selector" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"></div>
     <div id="report-body"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeReport()">Close</button>
-    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeReport()">Close</button></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== 2026 IRS RATES =====
+// ============================================================
+// CONFIG
+// ============================================================
 const IRS_RATES = { business:0.725, medical:0.205, charity:0.14, other:0.725 };
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONS   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const PL     = {business:'Business',medical:'Medical',charity:'Charity',other:'Other'};
 
-let trips          = JSON.parse(localStorage.getItem('mt_trips')     || '[]');
-let savedLocs      = JSON.parse(localStorage.getItem('mt_saved_locs')|| '[]');
-let userName       = localStorage.getItem('mt_name') || '';
-let userOrg        = localStorage.getItem('mt_org')  || '';
-let editId         = null;
-let curPurpose     = 'business';
-let activeFilter   = 'all';
-let activeMonth    = null;
-let mapsReady      = false;
-let distTimer      = null;
+// ============================================================
+// STATE
+// ============================================================
+let trips      = JSON.parse(localStorage.getItem('mt_trips')      || '[]');
+let savedLocs  = JSON.parse(localStorage.getItem('mt_saved_locs') || '[]');
+let userName   = localStorage.getItem('mt_name') || '';
+let userOrg    = localStorage.getItem('mt_org')  || '';
+let editId     = null;
+let curPurpose = 'business';
+let activeFilter = 'all';
+let activeMonth  = null;
 
-// ===== BOOT =====
+// Autocomplete state
+const acState = {
+  from: { timer:null, results:[], focused:-1, coords:null },
+  to:   { timer:null, results:[], focused:-1, coords:null }
+};
+
+// ============================================================
+// INIT
+// ============================================================
 function init(){
-  if(!userName){ document.getElementById('setup-screen').style.display='flex'; }
-  else { document.getElementById('setup-screen').style.display='none'; loadApp(); }
+  if(!userName){
+    document.getElementById('setup-screen').style.display = 'flex';
+  } else {
+    document.getElementById('setup-screen').style.display = 'none';
+    loadApp();
+  }
 }
 
 function completeSetup(){
   const n = document.getElementById('setup-name').value.trim();
   if(!n){ showToast('Please enter your name'); return; }
-  userName = n; userOrg = document.getElementById('setup-org').value.trim();
-  localStorage.setItem('mt_name',userName); localStorage.setItem('mt_org',userOrg);
-  document.getElementById('setup-screen').style.display='none';
+  userName = n;
+  userOrg  = document.getElementById('setup-org').value.trim();
+  localStorage.setItem('mt_name', userName);
+  localStorage.setItem('mt_org',  userOrg);
+  document.getElementById('setup-screen').style.display = 'none';
   loadApp();
 }
 
 function loadApp(){
   const now = new Date();
-  document.getElementById('topbar-sub').textContent = userName + ' \u2022 ' + MONTHS[now.getMonth()]+' '+now.getFullYear();
+  document.getElementById('topbar-sub').textContent =
+    userName + ' \u2022 ' + MONTHS[now.getMonth()] + ' ' + now.getFullYear();
   document.getElementById('f-date').value = now.toISOString().slice(0,10);
-  updateStats(); renderList(); renderSavedChips();
-  loadMaps();
-}
-
-// ===== MAPS =====
-function loadMaps(){
-  // Using a public demo key - works for moderate use
-  // For production with 10 people, get a free Google Maps API key at console.cloud.google.com
-  const s = document.createElement('script');
-  s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&libraries=places&callback=mapsLoaded';
-  s.async = true;
-  s.onerror = ()=>{ setDistStatus('err','Maps unavailable - enter miles manually'); };
-  document.head.appendChild(s);
-}
-
-window.mapsLoaded = function(){
-  mapsReady = true;
-  const opts = { types:['address'], componentRestrictions:{country:'us'} };
-  const ac1 = new google.maps.places.Autocomplete(document.getElementById('f-from'), opts);
-  const ac2 = new google.maps.places.Autocomplete(document.getElementById('f-to'),   opts);
-  ac1.addListener('place_changed', ()=>{ clearTimeout(distTimer); setTimeout(calcDistance,300); });
-  ac2.addListener('place_changed', ()=>{ clearTimeout(distTimer); setTimeout(calcDistance,300); });
-};
-
-function scheduleDist(){
-  clearTimeout(distTimer);
-  distTimer = setTimeout(()=>{ if(mapsReady) calcDistance(); }, 1200);
-}
-
-function calcDistance(){
-  if(!mapsReady) return;
-  const from = document.getElementById('f-from').value.trim();
-  const to   = document.getElementById('f-to').value.trim();
-  if(!from || !to || from.length < 5 || to.length < 5) return;
-
-  setDistStatus('loading','Calculating distance...');
-  new google.maps.DistanceMatrixService().getDistanceMatrix({
-    origins:[from], destinations:[to],
-    travelMode: google.maps.TravelMode.DRIVING,
-    unitSystem: google.maps.UnitSystem.IMPERIAL
-  }, (res, status)=>{
-    if(status==='OK' && res.rows[0].elements[0].status==='OK'){
-      const el = res.rows[0].elements[0];
-      const miles = (el.distance.value * 0.000621371).toFixed(1);
-      document.getElementById('f-miles').value = miles;
-      setDistStatus('ok', el.distance.text + ' \u2022 ' + el.duration.text + ' drive');
-    } else {
-      setDistStatus('err','Could not calculate - enter miles manually');
-    }
+  updateStats();
+  renderList();
+  renderSavedChips();
+  // Close dropdowns on outside click
+  document.addEventListener('click', e => {
+    if(!e.target.closest('.ac-wrap')){ closeAc('from'); closeAc('to'); }
   });
+}
+
+// ============================================================
+// FREE GEOCODING + ROUTING  (no API key required)
+// Nominatim (OpenStreetMap) for address search
+// OSRM for driving distance
+// ============================================================
+async function nominatimSearch(query){
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=us&limit=6&addressdetails=1`;
+  const res = await fetch(url, { headers:{ 'Accept-Language':'en' } });
+  return res.json();
+}
+
+async function osrmRoute(fromCoords, toCoords){
+  // OSRM public demo — driving distance
+  const url = `https://router.project-osrm.org/route/v1/driving/${fromCoords.lon},${fromCoords.lat};${toCoords.lon},${toCoords.lat}?overview=false`;
+  const res = await fetch(url);
+  const data = await res.json();
+  if(data.code === 'Ok' && data.routes.length){
+    const meters = data.routes[0].distance;
+    const seconds = data.routes[0].duration;
+    return { miles: (meters * 0.000621371), seconds };
+  }
+  throw new Error('No route');
+}
+
+// ============================================================
+// AUTOCOMPLETE
+// ============================================================
+function acSearch(field, val){
+  const st = acState[field];
+  clearTimeout(st.timer);
+  if(val.length < 3){ closeAc(field); st.coords = null; return; }
+  // Debounce 400ms to respect Nominatim rate limit
+  st.timer = setTimeout(async () => {
+    const drop = document.getElementById('ac-' + field);
+    drop.innerHTML = '<div class="ac-loading"><div class="ac-spinner"></div>Searching...</div>';
+    drop.classList.add('open');
+    try {
+      const results = await nominatimSearch(val);
+      st.results = results;
+      st.focused = -1;
+      if(!results.length){
+        drop.innerHTML = '<div class="ac-loading">No results found</div>';
+        return;
+      }
+      drop.innerHTML = results.map((r,i) => {
+        const parts = r.display_name.split(',');
+        const main = parts.slice(0,2).join(',').trim();
+        const sub  = parts.slice(2).join(',').trim();
+        return `<div class="ac-item" data-idx="${i}" onmousedown="acPick('${field}',${i})">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div class="ac-item-text"><div class="ac-item-main">${main}</div><div class="ac-item-sub">${sub}</div></div>
+        </div>`;
+      }).join('');
+    } catch(e){
+      drop.innerHTML = '<div class="ac-loading">Search failed - type address manually</div>';
+    }
+  }, 400);
+}
+
+function acPick(field, idx){
+  const r = acState[field].results[idx];
+  if(!r) return;
+  acState[field].coords = { lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
+  document.getElementById('f-' + field).value = r.display_name.split(',').slice(0,4).join(',').trim();
+  closeAc(field);
+  // Auto-calc distance if both sides have coords
+  setTimeout(() => maybCalcDist(), 100);
+}
+
+function acKeydown(e, field){
+  const drop = document.getElementById('ac-' + field);
+  const st   = acState[field];
+  if(!drop.classList.contains('open')) return;
+  const items = drop.querySelectorAll('.ac-item');
+  if(e.key === 'ArrowDown'){
+    e.preventDefault();
+    st.focused = Math.min(st.focused + 1, items.length - 1);
+    items.forEach((el,i) => el.classList.toggle('focused', i === st.focused));
+  } else if(e.key === 'ArrowUp'){
+    e.preventDefault();
+    st.focused = Math.max(st.focused - 1, 0);
+    items.forEach((el,i) => el.classList.toggle('focused', i === st.focused));
+  } else if(e.key === 'Enter' && st.focused >= 0){
+    e.preventDefault();
+    acPick(field, st.focused);
+  } else if(e.key === 'Escape'){
+    closeAc(field);
+  }
+}
+
+function closeAc(field){
+  document.getElementById('ac-' + field).classList.remove('open');
+}
+
+// ============================================================
+// DISTANCE CALCULATION  (OSRM)
+// ============================================================
+function maybCalcDist(){
+  if(acState.from.coords && acState.to.coords) calcDist();
+}
+
+async function calcDist(){
+  const fromCoords = acState.from.coords;
+  const toCoords   = acState.to.coords;
+  if(!fromCoords || !toCoords){
+    setDistStatus('err', 'Pick addresses from the dropdown to auto-calculate miles');
+    return;
+  }
+  setDistStatus('loading', 'Calculating driving distance...');
+  try {
+    const { miles, seconds } = await osrmRoute(fromCoords, toCoords);
+    document.getElementById('f-miles').value = miles.toFixed(1);
+    const mins = Math.round(seconds / 60);
+    const timeStr = mins >= 60 ? `${Math.floor(mins/60)}h ${mins%60}m` : `${mins} min`;
+    setDistStatus('ok', `${miles.toFixed(1)} mi \u2022 ~${timeStr} drive`);
+  } catch(e){
+    setDistStatus('err', 'Could not calculate route - enter miles manually');
+  }
 }
 
 function setDistStatus(type, msg){
   const el = document.getElementById('dist-status');
   const icons = {
-    loading:'<div class="dist-spinner"></div>',
-    ok:'<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
-    err:'<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+    loading: '<div class="ac-spinner"></div>',
+    ok:  '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+    err: '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
   };
-  el.innerHTML = (icons[type]||'') + '<span>'+msg+'</span>';
+  el.innerHTML = (icons[type] || '') + '<span>' + msg + '</span>';
   el.className = 'dist-status ' + type;
 }
 
-// ===== STATS =====
-function getRate(t){ return t.purpose==='other'?(parseFloat(t.customRate)||IRS_RATES.business):(IRS_RATES[t.purpose]||IRS_RATES.business); }
-
-function updateStats(){
-  const now=new Date(), m=now.getMonth(), y=now.getFullYear();
-  const mt = trips.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getMonth()===m&&d.getFullYear()===y; });
-  const miles = mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
-  const val   = mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
-  document.getElementById('stat-trips').textContent = mt.length;
-  document.getElementById('stat-miles').textContent = miles.toFixed(1);
-  document.getElementById('stat-value').textContent = '$'+val.toFixed(2);
-  document.getElementById('stat-days').textContent  = new Set(mt.map(t=>t.date)).size;
+// ============================================================
+// STATS
+// ============================================================
+function getRate(t){
+  return t.purpose === 'other'
+    ? (parseFloat(t.customRate) || IRS_RATES.business)
+    : (IRS_RATES[t.purpose] || IRS_RATES.business);
 }
 
-// ===== LIST =====
+function updateStats(){
+  const now = new Date(), m = now.getMonth(), y = now.getFullYear();
+  const mt = trips.filter(t => {
+    const d = new Date(t.date + 'T12:00:00');
+    return d.getMonth() === m && d.getFullYear() === y;
+  });
+  const miles = mt.reduce((s,t) => s + parseFloat(t.miles||0), 0);
+  const val   = mt.reduce((s,t) => s + parseFloat(t.miles||0) * getRate(t), 0);
+  document.getElementById('stat-trips').textContent = mt.length;
+  document.getElementById('stat-miles').textContent = miles.toFixed(1);
+  document.getElementById('stat-value').textContent = '$' + val.toFixed(2);
+  document.getElementById('stat-days').textContent  = new Set(mt.map(t => t.date)).size;
+}
+
+// ============================================================
+// RENDER LIST
+// ============================================================
 function renderList(){
-  const q=(document.getElementById('search-input').value||'').toLowerCase();
-  let filtered = trips.filter(t=>{
-    const mp = activeFilter==='all'||t.purpose===activeFilter;
-    const ms = !q||(t.from||'').toLowerCase().includes(q)||(t.to||'').toLowerCase().includes(q)||(t.notes||'').toLowerCase().includes(q);
-    return mp&&ms;
-  }).sort((a,b)=>b.date.localeCompare(a.date));
+  const q = (document.getElementById('search-input').value || '').toLowerCase();
+  const filtered = trips.filter(t => {
+    const mp = activeFilter === 'all' || t.purpose === activeFilter;
+    const ms = !q || (t.from||'').toLowerCase().includes(q) || (t.to||'').toLowerCase().includes(q) || (t.notes||'').toLowerCase().includes(q);
+    return mp && ms;
+  }).sort((a,b) => b.date.localeCompare(a.date));
 
   const el = document.getElementById('trip-list-container');
   if(!filtered.length){
-    el.innerHTML=`<div class="empty"><div class="empty-icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5 18 1 16 1 14.5 2.5L11 6 2.8 4.2l-2.3 2.3 5.1 5.1L3.5 14l-1 3.5L6 17l1.5 1.5 3.5-1 2.1-2.4 5.1 5.1 2.3-2.3z"/></svg></div><h3>No trips logged yet</h3><p>Tap the + button to log your first trip.</p></div>`;
+    el.innerHTML = `<div class="empty">
+      <div class="empty-icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5 18 1 16 1 14.5 2.5L11 6 2.8 4.2l-2.3 2.3 5.1 5.1L3.5 14l-1 3.5L6 17l1.5 1.5 3.5-1 2.1-2.4 5.1 5.1 2.3-2.3z"/></svg></div>
+      <h3>No trips logged yet</h3><p>Tap the + button to log your first trip.</p></div>`;
     return;
   }
 
-  const groups={};
-  filtered.forEach(t=>{
-    const d=new Date(t.date+'T12:00:00');
-    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    const label=MONTHS[d.getMonth()]+' '+d.getFullYear();
-    if(!groups[key]) groups[key]={label,trips:[]};
+  const groups = {};
+  filtered.forEach(t => {
+    const d = new Date(t.date + 'T12:00:00');
+    const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    if(!groups[key]) groups[key] = { label: MONTHS[d.getMonth()]+' '+d.getFullYear(), trips:[] };
     groups[key].trips.push(t);
   });
 
-  let html='';
-  Object.keys(groups).sort((a,b)=>b.localeCompare(a)).forEach(key=>{
-    const g=groups[key];
-    const gm=g.trips.reduce((s,t)=>s+parseFloat(t.miles||0),0);
-    const gv=g.trips.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
-    html+=`<div class="month-header">${g.label} <span style="font-weight:500">${gm.toFixed(1)} mi &bull; $${gv.toFixed(2)}</span></div><div class="trip-list">`;
-    g.trips.forEach(t=>{
-      const d=new Date(t.date+'T12:00:00');
-      const p=t.purpose||'business';
-      const mi=parseFloat(t.miles||0);
-      const val=(mi*getRate(t)).toFixed(2);
-      html+=`<div class="trip-row purpose-${p}">
+  let html = '';
+  Object.keys(groups).sort((a,b) => b.localeCompare(a)).forEach(key => {
+    const g = groups[key];
+    const gm = g.trips.reduce((s,t) => s+parseFloat(t.miles||0),0);
+    const gv = g.trips.reduce((s,t) => s+parseFloat(t.miles||0)*getRate(t),0);
+    html += `<div class="month-header">${g.label} <span style="font-weight:500">${gm.toFixed(1)} mi &bull; $${gv.toFixed(2)}</span></div><div class="trip-list">`;
+    g.trips.forEach(t => {
+      const d   = new Date(t.date+'T12:00:00');
+      const p   = t.purpose || 'business';
+      const mi  = parseFloat(t.miles||0);
+      const val = (mi * getRate(t)).toFixed(2);
+      html += `<div class="trip-row purpose-${p}">
         <div class="date-badge db-purpose-${p}"><div class="db-mon">${MONS[d.getMonth()]}</div><div class="db-day">${d.getDate()}</div></div>
         <div class="trip-info">
           <div class="trip-name">${DAYS[d.getDay()]} <span class="badge badge-${p}">${PL[p]}</span></div>
-          ${t.notes?`<div style="font-size:.78rem;font-weight:600;color:var(--text2);margin-top:2px">${t.notes}</div>`:''}
+          ${t.notes ? `<div style="font-size:.78rem;font-weight:600;color:var(--text2);margin-top:2px">${t.notes}</div>` : ''}
           <div class="trip-route">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             ${t.from||'Start'}
@@ -585,199 +720,274 @@ function renderList(){
             <div class="miles-badge">${mi.toFixed(1)} mi</div>
             <div style="font-size:.67rem;color:var(--green);font-weight:700;margin-top:3px">$${val}</div>
           </div>
-          <button class="btn btn-xs btn-outline btn-icon" onclick="editTrip('${t.id}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-          <button class="btn btn-xs btn-danger btn-icon" onclick="deleteTrip('${t.id}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+          <button class="btn btn-xs btn-outline btn-icon" onclick="editTrip('${t.id}')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn btn-xs btn-danger btn-icon" onclick="deleteTrip('${t.id}')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
         </div>
       </div>`;
     });
-    html+='</div>';
+    html += '</div>';
   });
-  el.innerHTML=html;
+  el.innerHTML = html;
 }
 
-function filterPurpose(p,btn){
-  activeFilter=p;
-  document.querySelectorAll('.pill').forEach(e=>e.classList.remove('active'));
+function filterPurpose(p, btn){
+  activeFilter = p;
+  document.querySelectorAll('.pill').forEach(e => e.classList.remove('active'));
   btn.classList.add('active');
   renderList();
 }
 
-// ===== MODAL =====
+// ============================================================
+// MODAL OPEN / CLOSE
+// ============================================================
 function openModal(trip){
-  editId=null; curPurpose='business';
-  document.getElementById('modal-title').textContent='Log a Trip';
-  document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
-  ['f-miles','f-from','f-to','f-notes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-custom-rate').value='0.725';
-  document.getElementById('dist-status').innerHTML='';
-  document.getElementById('dist-status').className='dist-status';
-  document.getElementById('custom-rate-group').style.display='none';
+  editId = null; curPurpose = 'business';
+  document.getElementById('modal-title').textContent = 'Log a Trip';
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  ['f-miles','f-from','f-to','f-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-custom-rate').value = '0.725';
+  document.getElementById('dist-status').innerHTML = '';
+  document.getElementById('dist-status').className = 'dist-status';
+  document.getElementById('custom-rate-group').style.display = 'none';
+  acState.from.coords = null; acState.to.coords = null;
+  acState.from.results = []; acState.to.results = [];
+  closeAc('from'); closeAc('to');
   selectPurpose('business');
+
   if(trip){
-    editId=trip.id;
-    document.getElementById('modal-title').textContent='Edit Trip';
-    document.getElementById('f-date').value=trip.date;
-    document.getElementById('f-miles').value=trip.miles;
-    document.getElementById('f-from').value=trip.from||'';
-    document.getElementById('f-to').value=trip.to||'';
-    document.getElementById('f-notes').value=trip.notes||'';
-    if(trip.customRate) document.getElementById('f-custom-rate').value=trip.customRate;
-    selectPurpose(trip.purpose||'business');
+    editId = trip.id;
+    document.getElementById('modal-title').textContent = 'Edit Trip';
+    document.getElementById('f-date').value   = trip.date;
+    document.getElementById('f-miles').value  = trip.miles;
+    document.getElementById('f-from').value   = trip.from  || '';
+    document.getElementById('f-to').value     = trip.to    || '';
+    document.getElementById('f-notes').value  = trip.notes || '';
+    if(trip.customRate) document.getElementById('f-custom-rate').value = trip.customRate;
+    if(trip.fromCoords) acState.from.coords = trip.fromCoords;
+    if(trip.toCoords)   acState.to.coords   = trip.toCoords;
+    selectPurpose(trip.purpose || 'business');
   }
   renderSavedChips();
   document.getElementById('add-overlay').classList.add('open');
 }
+
 function closeModal(){ document.getElementById('add-overlay').classList.remove('open'); }
 
 function selectPurpose(p){
-  curPurpose=p;
-  ['business','medical','charity','other'].forEach(x=>document.getElementById('pb-'+x).className='purpose-btn'+(x===p?' sel-'+x:''));
-  document.getElementById('custom-rate-group').style.display=p==='other'?'block':'none';
+  curPurpose = p;
+  ['business','medical','charity','other'].forEach(x =>
+    document.getElementById('pb-'+x).className = 'purpose-btn' + (x===p ? ' sel-'+x : ''));
+  document.getElementById('custom-rate-group').style.display = p==='other' ? 'block' : 'none';
 }
 
-// ===== SAVE =====
+// ============================================================
+// SAVE / EDIT / DELETE
+// ============================================================
 function saveTrip(){
-  const date=document.getElementById('f-date').value;
-  const miles=parseFloat(document.getElementById('f-miles').value);
-  const from=document.getElementById('f-from').value.trim();
-  const to=document.getElementById('f-to').value.trim();
-  const notes=document.getElementById('f-notes').value.trim();
-  const customRate=curPurpose==='other'?parseFloat(document.getElementById('f-custom-rate').value):null;
-  if(!date){showToast('Select a date');return;}
-  if(!miles||miles<=0){showToast('Enter valid mileage');return;}
-  if(!from||!to){showToast('Enter start and destination');return;}
-  [from,to].forEach(loc=>{ if(loc&&!savedLocs.includes(loc)){ savedLocs.push(loc); localStorage.setItem('mt_saved_locs',JSON.stringify(savedLocs)); } });
-  const data={date,miles,from,to,notes,purpose:curPurpose,customRate};
-  if(editId){ const i=trips.findIndex(t=>t.id===editId); if(i>-1) trips[i]={...trips[i],...data}; }
-  else trips.push({id:Date.now().toString(),...data});
-  localStorage.setItem('mt_trips',JSON.stringify(trips));
-  closeModal(); updateStats(); renderList(); showToast(editId?'Trip updated':'Trip saved!');
+  const date  = document.getElementById('f-date').value;
+  const miles = parseFloat(document.getElementById('f-miles').value);
+  const from  = document.getElementById('f-from').value.trim();
+  const to    = document.getElementById('f-to').value.trim();
+  const notes = document.getElementById('f-notes').value.trim();
+  const customRate = curPurpose === 'other' ? parseFloat(document.getElementById('f-custom-rate').value) : null;
+
+  if(!date)            { showToast('Select a date');               return; }
+  if(!miles || miles<=0){ showToast('Enter valid mileage');         return; }
+  if(!from || !to)     { showToast('Enter start and destination'); return; }
+
+  // Save addresses for quick-fill
+  [from, to].forEach(loc => {
+    if(loc && !savedLocs.includes(loc)){
+      savedLocs.push(loc);
+      localStorage.setItem('mt_saved_locs', JSON.stringify(savedLocs));
+    }
+  });
+
+  const data = {
+    date, miles, from, to, notes, purpose: curPurpose, customRate,
+    fromCoords: acState.from.coords,
+    toCoords:   acState.to.coords
+  };
+
+  if(editId){
+    const i = trips.findIndex(t => t.id === editId);
+    if(i > -1) trips[i] = { ...trips[i], ...data };
+  } else {
+    trips.push({ id: Date.now().toString(), ...data });
+  }
+
+  localStorage.setItem('mt_trips', JSON.stringify(trips));
+  closeModal();
+  updateStats();
+  renderList();
+  showToast(editId ? 'Trip updated!' : 'Trip saved!');
 }
 
-function editTrip(id){ const t=trips.find(t=>t.id===id); if(t) openModal(t); }
-function deleteTrip(id){ if(!confirm('Delete this trip?')) return; trips=trips.filter(t=>t.id!==id); localStorage.setItem('mt_trips',JSON.stringify(trips)); updateStats(); renderList(); showToast('Deleted'); }
+function editTrip(id){
+  const t = trips.find(t => t.id === id);
+  if(t) openModal(t);
+}
 
-// ===== SAVED CHIPS =====
+function deleteTrip(id){
+  if(!confirm('Delete this trip?')) return;
+  trips = trips.filter(t => t.id !== id);
+  localStorage.setItem('mt_trips', JSON.stringify(trips));
+  updateStats(); renderList();
+  showToast('Trip deleted');
+}
+
+// ============================================================
+// SAVED CHIPS
+// ============================================================
 function renderSavedChips(){
-  const el=document.getElementById('saved-locations-list');
-  if(!savedLocs.length){ el.innerHTML='<span style="font-size:.74rem;color:var(--text3)">Addresses you enter will appear here for quick-fill.</span>'; return; }
-  el.innerHTML=savedLocs.slice(-12).reverse().map(loc=>`<button class="pill" style="font-size:.68rem;padding:5px 10px" onclick="quickFill('${loc.replace(/'/g,"\\'")}')"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${loc.length>30?loc.slice(0,28)+'...':loc}</button>`).join('');
+  const el = document.getElementById('saved-chips');
+  if(!savedLocs.length){
+    el.innerHTML = '<span style="font-size:.74rem;color:var(--text3)">Addresses you enter will appear here for quick-fill.</span>';
+    return;
+  }
+  el.innerHTML = savedLocs.slice(-14).reverse().map(loc =>
+    `<button class="pill" style="font-size:.68rem;padding:5px 10px" onclick="quickFill('${loc.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
+      <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      ${loc.length > 32 ? loc.slice(0,30)+'...' : loc}
+    </button>`
+  ).join('');
 }
 
 function quickFill(loc){
-  const f=document.getElementById('f-from'), t=document.getElementById('f-to');
-  if(!f.value){ f.value=loc; } else { t.value=loc; setTimeout(calcDistance,200); }
+  const f = document.getElementById('f-from');
+  const t = document.getElementById('f-to');
+  if(!f.value)      f.value = loc;
+  else              t.value = loc;
 }
 
-// ===== SETTINGS =====
+// ============================================================
+// SETTINGS
+// ============================================================
 function openSettings(){
-  document.getElementById('s-name').value=userName;
-  document.getElementById('s-org').value=userOrg;
+  document.getElementById('s-name').value = userName;
+  document.getElementById('s-org').value  = userOrg;
   renderSettingsSaved();
   document.getElementById('settings-overlay').classList.add('open');
 }
 function closeSettings(){ document.getElementById('settings-overlay').classList.remove('open'); }
 function saveSettings(){
-  const n=document.getElementById('s-name').value.trim();
-  if(!n){showToast('Name required');return;}
-  userName=n; userOrg=document.getElementById('s-org').value.trim();
-  localStorage.setItem('mt_name',userName); localStorage.setItem('mt_org',userOrg);
-  const now=new Date();
-  document.getElementById('topbar-sub').textContent=userName+' \u2022 '+MONTHS[now.getMonth()]+' '+now.getFullYear();
+  const n = document.getElementById('s-name').value.trim();
+  if(!n){ showToast('Name is required'); return; }
+  userName = n; userOrg = document.getElementById('s-org').value.trim();
+  localStorage.setItem('mt_name', userName); localStorage.setItem('mt_org', userOrg);
+  const now = new Date();
+  document.getElementById('topbar-sub').textContent = userName + ' \u2022 ' + MONTHS[now.getMonth()] + ' ' + now.getFullYear();
   closeSettings(); showToast('Settings saved');
 }
 function renderSettingsSaved(){
-  const el=document.getElementById('settings-saved-list');
-  if(!savedLocs.length){ el.innerHTML='<span style="font-size:.75rem;color:var(--text3)">No saved locations yet.</span>'; return; }
-  el.innerHTML=savedLocs.map((loc,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--text2);gap:8px"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${loc}</span><button onclick="removeLoc(${i})" style="background:none;border:none;cursor:pointer;color:var(--red);font-weight:700;font-size:.8rem;flex-shrink:0">X</button></div>`).join('');
+  const el = document.getElementById('settings-saved-list');
+  if(!savedLocs.length){ el.innerHTML = '<span style="font-size:.75rem;color:var(--text3)">No saved locations yet.</span>'; return; }
+  el.innerHTML = savedLocs.map((loc,i) =>
+    `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--text2);gap:8px">
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${loc}</span>
+      <button onclick="removeLoc(${i})" style="background:none;border:none;cursor:pointer;color:var(--red);font-weight:700;font-size:.8rem;flex-shrink:0">&#x2715;</button>
+    </div>`
+  ).join('');
 }
 function removeLoc(i){ savedLocs.splice(i,1); localStorage.setItem('mt_saved_locs',JSON.stringify(savedLocs)); renderSettingsSaved(); renderSavedChips(); showToast('Removed'); }
 
-// ===== REPORT =====
+// ============================================================
+// REPORT
+// ============================================================
 function getReportMonths(){
-  const s=new Set(); trips.forEach(t=>{ const d=new Date(t.date+'T12:00:00'); s.add(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')); });
-  const now=new Date(); s.add(now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'));
-  return [...s].sort((a,b)=>b.localeCompare(a));
+  const s = new Set();
+  trips.forEach(t => { const d = new Date(t.date+'T12:00:00'); s.add(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')); });
+  const now = new Date(); s.add(now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'));
+  return [...s].sort((a,b) => b.localeCompare(a));
 }
 
 function openReport(){
-  const months=getReportMonths(), now=new Date();
-  const cur=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-  activeMonth=months.includes(cur)?cur:months[0];
+  const months = getReportMonths(), now = new Date();
+  const cur = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  activeMonth = months.includes(cur) ? cur : months[0];
   renderMonthPills(months); renderReportBody();
   document.getElementById('report-overlay').classList.add('open');
 }
 function closeReport(){ document.getElementById('report-overlay').classList.remove('open'); }
 
 function renderMonthPills(months){
-  document.getElementById('report-month-selector').innerHTML=months.map(m=>{
-    const [yr,mo]=m.split('-');
+  document.getElementById('report-month-selector').innerHTML = months.map(m => {
+    const [yr,mo] = m.split('-');
     return `<button class="pill ${m===activeMonth?'active':''}" onclick="pickMonth('${m}',this)">${MONS[parseInt(mo)-1]} ${yr}</button>`;
   }).join('');
 }
-
 function pickMonth(m,btn){
-  activeMonth=m;
-  document.querySelectorAll('#report-month-selector .pill').forEach(e=>e.classList.remove('active'));
-  btn.classList.add('active');
-  renderReportBody();
+  activeMonth = m;
+  document.querySelectorAll('#report-month-selector .pill').forEach(e => e.classList.remove('active'));
+  btn.classList.add('active'); renderReportBody();
 }
 
 function renderReportBody(){
-  const [yr,mo]=activeMonth.split('-');
-  const month=parseInt(mo)-1, year=parseInt(yr);
-  const label=MONTHS[month]+' '+year;
-  document.getElementById('report-title').textContent=label+' Report';
-  const mt=trips.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getMonth()===month&&d.getFullYear()===year; }).sort((a,b)=>a.date.localeCompare(b.date));
-  const totMi=mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
-  const totVal=mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
-  const el=document.getElementById('report-body');
+  const [yr,mo] = activeMonth.split('-');
+  const month = parseInt(mo)-1, year = parseInt(yr);
+  const label = MONTHS[month]+' '+year;
+  document.getElementById('report-title').textContent = label+' Report';
+  const mt = trips.filter(t => { const d=new Date(t.date+'T12:00:00'); return d.getMonth()===month&&d.getFullYear()===year; }).sort((a,b)=>a.date.localeCompare(b.date));
+  const totMi  = mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
+  const totVal = mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
+  const el = document.getElementById('report-body');
   if(!mt.length){ el.innerHTML=`<div class="empty" style="padding:24px"><h3>No trips for ${label}</h3></div>`; return; }
-  el.innerHTML=`
+  el.innerHTML = `
     <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.8rem">
       <strong>${userName}</strong>${userOrg?' &bull; '+userOrg:''} &bull; ${label}
     </div>
     <table class="report-table">
       <thead><tr><th>Date</th><th>Purpose</th><th>From</th><th>To</th><th>Notes</th><th style="text-align:right">Miles</th><th style="text-align:right">Rate</th><th style="text-align:right">Amount</th></tr></thead>
-      <tbody>${mt.map(t=>{ const d=new Date(t.date+'T12:00:00'); const mi=parseFloat(t.miles||0); const r=getRate(t);
-        return `<tr><td>${(d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear()}</td><td>${PL[t.purpose||'business']}</td>
+      <tbody>${mt.map(t=>{
+        const d=new Date(t.date+'T12:00:00'); const mi=parseFloat(t.miles||0); const r=getRate(t);
+        return `<tr>
+          <td>${(d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear()}</td>
+          <td>${PL[t.purpose||'business']}</td>
           <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.from||''}</td>
           <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.to||''}</td>
           <td>${t.notes||''}</td>
           <td style="text-align:right;font-family:'DM Mono',monospace">${mi.toFixed(1)}</td>
           <td style="text-align:right;font-family:'DM Mono',monospace">$${r.toFixed(3)}</td>
-          <td style="text-align:right;font-family:'DM Mono',monospace">$${(mi*r).toFixed(2)}</td></tr>`;
+          <td style="text-align:right;font-family:'DM Mono',monospace">$${(mi*r).toFixed(2)}</td>
+        </tr>`;
       }).join('')}</tbody>
     </table>
     <div class="report-total"><span>${mt.length} trips</span><span>${totMi.toFixed(1)} mi &bull; $${totVal.toFixed(2)}</span></div>`;
 }
 
-// ===== DOWNLOAD CSV =====
+// ============================================================
+// CSV DOWNLOAD
+// ============================================================
 function downloadCSV(){
-  const [yr,mo]=activeMonth.split('-');
+  const [yr,mo] = activeMonth.split('-');
   const month=parseInt(mo)-1, year=parseInt(yr);
-  const mt=trips.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getMonth()===month&&d.getFullYear()===year; }).sort((a,b)=>a.date.localeCompare(b.date));
+  const mt = trips.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===month&&d.getFullYear()===year;}).sort((a,b)=>a.date.localeCompare(b.date));
   const rows=[['Name','Organization','Date','Purpose','From','To','Notes / Client','Miles','Rate ($/mi)','Amount ($)']];
-  mt.forEach(t=>{ const mi=parseFloat(t.miles||0), r=getRate(t); rows.push([userName,userOrg,t.date,PL[t.purpose||'business'],t.from||'',t.to||'',t.notes||'',mi.toFixed(1),r.toFixed(3),(mi*r).toFixed(2)]); });
+  mt.forEach(t=>{const mi=parseFloat(t.miles||0),r=getRate(t);rows.push([userName,userOrg,t.date,PL[t.purpose||'business'],t.from||'',t.to||'',t.notes||'',mi.toFixed(1),r.toFixed(3),(mi*r).toFixed(2)]);});
   const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download=`MileTracker_${userName.replace(/\s+/g,'_')}_${MONTHS[month]}_${year}.csv`; a.click();
 }
 
-// ===== PRINT =====
+// ============================================================
+// PRINT
+// ============================================================
 function printReport(){
   const [yr,mo]=activeMonth.split('-');
-  const month=parseInt(mo)-1, year=parseInt(yr);
-  const label=MONTHS[month]+' '+year;
-  const mt=trips.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getMonth()===month&&d.getFullYear()===year; }).sort((a,b)=>a.date.localeCompare(b.date));
+  const month=parseInt(mo)-1,year=parseInt(yr),label=MONTHS[month]+' '+year;
+  const mt=trips.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===month&&d.getFullYear()===year;}).sort((a,b)=>a.date.localeCompare(b.date));
   const totMi=mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
   const totVal=mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
   const pw=window.open('','_blank');
-  pw.document.write(`<!DOCTYPE html><html><head><title>${userName} - Mileage ${label}</title>
+  pw.document.write(`<!DOCTYPE html><html><head><title>${userName} Mileage ${label}</title>
   <style>
-    @page{margin:.75in} body{font-family:Arial,sans-serif;color:#1C1209;font-size:12px}
+    @page{margin:.75in}body{font-family:Arial,sans-serif;color:#1C1209;font-size:12px}
     .hdr{border-bottom:3px solid #6B2D0F;padding-bottom:14px;margin-bottom:20px}
-    .hdr h1{font-size:20px;color:#6B2D0F;margin:0 0 4px} .hdr .sub{color:#9C7B6B;font-size:11px}
+    .hdr h1{font-size:20px;color:#6B2D0F;margin:0 0 4px}.hdr .sub{color:#9C7B6B;font-size:11px}
     .meta{display:flex;gap:28px;margin-bottom:18px;flex-wrap:wrap}
     .mi label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9C7B6B;display:block;margin-bottom:2px}
     .mi span{font-size:13px;font-weight:700}
@@ -786,8 +996,7 @@ function printReport(){
     td{padding:7px 8px;border-bottom:1px solid #E8DDD4;color:#5C4033}
     tr:nth-child(even) td{background:#FDF8F4}
     .tot{background:#6B2D0F;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;font-weight:700;font-size:13px;border-radius:6px;margin-top:8px}
-    .sigs{margin-top:40px;display:flex;gap:40px}
-    .sig{flex:1} .sig .ln{border-bottom:1px solid #1C1209;height:30px;margin-bottom:4px}
+    .sigs{margin-top:40px;display:flex;gap:40px}.sig{flex:1}.sig .ln{border-bottom:1px solid #1C1209;height:30px;margin-bottom:4px}
     .sig .lb{font-size:10px;color:#9C7B6B;text-transform:uppercase;letter-spacing:.04em}
     .ft{margin-top:24px;font-size:10px;color:#9C7B6B;border-top:1px solid #E8DDD4;padding-top:10px;text-align:center}
   </style></head><body>
@@ -798,10 +1007,10 @@ function printReport(){
     <div class="mi"><label>Period</label><span>${label}</span></div>
     <div class="mi"><label>Total Trips</label><span>${mt.length}</span></div>
     <div class="mi"><label>Total Miles</label><span>${totMi.toFixed(1)}</span></div>
-    <div class="mi"><label>Total Reimbursement</label><span style="color:#6B2D0F">$${totVal.toFixed(2)}</span></div>
+    <div class="mi"><label>Reimbursement</label><span style="color:#6B2D0F">$${totVal.toFixed(2)}</span></div>
   </div>
   <table><thead><tr><th>Date</th><th>Purpose</th><th>From</th><th>To</th><th>Notes / Client</th><th style="text-align:right">Miles</th><th style="text-align:right">Rate</th><th style="text-align:right">Amount</th></tr></thead>
-  <tbody>${mt.map(t=>{ const d=new Date(t.date+'T12:00:00'); const mi=parseFloat(t.miles||0),r=getRate(t);
+  <tbody>${mt.map(t=>{const d=new Date(t.date+'T12:00:00');const mi=parseFloat(t.miles||0),r=getRate(t);
     return `<tr><td>${(d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear()}</td><td>${PL[t.purpose||'business']}</td><td>${t.from||''}</td><td>${t.to||''}</td><td>${t.notes||''}</td><td style="text-align:right">${mi.toFixed(1)}</td><td style="text-align:right">$${r.toFixed(3)}</td><td style="text-align:right">$${(mi*r).toFixed(2)}</td></tr>`;
   }).join('')}</tbody></table>
   <div class="tot"><span>${mt.length} trips &bull; 2026 IRS Rates</span><span>${totMi.toFixed(1)} mi &bull; $${totVal.toFixed(2)}</span></div>
@@ -815,8 +1024,14 @@ function printReport(){
   pw.document.close();
 }
 
-// ===== TOAST =====
-function showToast(msg){ const e=document.getElementById('toast'); e.textContent=msg; e.classList.add('show'); setTimeout(()=>e.classList.remove('show'),2200); }
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg){
+  const e = document.getElementById('toast');
+  e.textContent = msg; e.classList.add('show');
+  setTimeout(() => e.classList.remove('show'), 2200);
+}
 
 init();
 </script>
