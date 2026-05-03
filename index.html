@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mile Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#6B2D0F;--brand-mid:#8B3A12;--brand-light:#A0522D;
+  --accent:#E87A2A;--accent-light:#F59E0B;
+  --bg:#F7F3EF;--surface:#FFF;--surface2:#FDF8F4;
+  --border:#E8DDD4;--border-dark:#D4C4B0;
+  --text:#1C1209;--text2:#5C4033;--text3:#9C7B6B;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-dark:#166534;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-dark:#991B1B;
+  --yellow:#D97706;--yellow-bg:#FEF3C7;--yellow-dark:#92400E;
+  --blue:#1D4ED8;--blue-bg:#DBEAFE;
+  --gray:#6B7280;--gray-bg:#F3F4F6;
+  --sh-sm:0 1px 3px rgba(107,45,15,.08);
+  --sh:0 4px 12px rgba(107,45,15,.12);
+  --sh-lg:0 12px 32px rgba(107,45,15,.18);
+  --r:10px;--rl:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+
+.topbar{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-mid) 60%,var(--brand-light) 100%);
+  color:#fff;padding:env(safe-area-inset-top,0px) 16px 0;min-height:56px;display:flex;align-items:center;
+  justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.25);position:sticky;top:0;z-index:50}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.topbar-icon{width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.2);flex-shrink:0}
+.topbar-title{font-size:.95rem;font-weight:800;letter-spacing:-.02em}
+.topbar-sub{font-size:.62rem;opacity:.65;margin-top:1px}
+.topbar-actions{display:flex;gap:6px;align-items:center}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;
+  border:none;cursor:pointer;font-size:.8rem;font-weight:600;transition:all .15s;font-family:inherit;white-space:nowrap;touch-action:manipulation}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#d46b1a}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.btn-outline{background:var(--surface);color:var(--brand);border:1.5px solid var(--border-dark)}.btn-outline:hover{background:var(--surface2);border-color:var(--accent)}
+.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{background:#b91c1c}
+.btn-sm{padding:7px 12px;font-size:.75rem}
+.btn-xs{padding:5px 9px;font-size:.69rem}
+.btn-icon{width:36px;height:36px;padding:0;justify-content:center;border-radius:8px}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px 16px 0;max-width:960px;margin:0 auto}
+.stat-card{background:var(--surface);border-radius:var(--rl);padding:14px;border:1.5px solid var(--border);box-shadow:var(--sh-sm)}
+.stat-icon-wrap{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.stat-icon-wrap svg{width:16px;height:16px}
+.ic-orange{background:var(--yellow-bg);color:var(--yellow)}.ic-green{background:var(--green-bg);color:var(--green)}
+.ic-blue{background:var(--blue-bg);color:var(--blue)}.ic-gray{background:var(--gray-bg);color:var(--gray)}
+.stat-num{font-size:1.7rem;font-weight:800;color:var(--text);line-height:1}
+.stat-label{font-size:.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+
+.main-area{max-width:960px;margin:0 auto;padding:16px 16px 100px}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-wrap{flex:1;position:relative;min-width:180px}
+.search-wrap input{width:100%;padding:10px 12px 10px 36px;border:1.5px solid var(--border);
+  border-radius:var(--r);font-size:.83rem;outline:none;background:var(--surface);font-family:inherit;color:var(--text)}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,122,42,.12)}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3)}
+
+.pills{display:flex;gap:5px;flex-wrap:wrap}
+.pill{padding:7px 11px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);
+  font-size:.72rem;cursor:pointer;font-weight:600;color:var(--text2);transition:all .15s;font-family:inherit}
+.pill:hover{border-color:var(--accent);color:var(--brand)}
+.pill.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+.trip-list{display:flex;flex-direction:column;gap:8px}
+.trip-row{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);
+  padding:12px 14px;display:flex;align-items:center;gap:12px;transition:all .18s;position:relative;overflow:hidden}
+.trip-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
+.trip-row.purpose-business::before{background:var(--accent)}
+.trip-row.purpose-medical::before{background:var(--blue)}
+.trip-row.purpose-charity::before{background:var(--green)}
+.trip-row.purpose-other::before{background:var(--gray)}
+.trip-row:hover{border-color:var(--accent);box-shadow:var(--sh)}
+
+.date-badge{width:50px;min-width:50px;height:54px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.db-purpose-business{background:var(--accent)}.db-purpose-medical{background:var(--blue)}
+.db-purpose-charity{background:var(--green)}.db-purpose-other{background:var(--gray)}
+.db-mon{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
+.db-day{font-size:1.35rem;font-weight:800;line-height:1}
+
+.trip-info{flex:1;min-width:0}
+.trip-name{font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:2px}
+.trip-route{font-size:.72rem;color:var(--text3);display:flex;align-items:center;gap:4px;margin-top:3px;flex-wrap:wrap}
+.trip-route svg{width:11px;height:11px;flex-shrink:0}
+.trip-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.miles-badge{font-family:'DM Mono',monospace;font-weight:500;font-size:.85rem;color:var(--brand);
+  background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;white-space:nowrap}
+
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:99px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.badge-business{background:var(--yellow-bg);color:var(--yellow-dark)}.badge-medical{background:var(--blue-bg);color:var(--blue)}
+.badge-charity{background:var(--green-bg);color:var(--green-dark)}.badge-other{background:var(--gray-bg);color:var(--gray)}
+
+.fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;
+  background:var(--accent);color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(232,122,42,.45);transition:all .18s;z-index:40}
+.fab:hover{background:#d46b1a;transform:scale(1.06)}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:640px;
+  max-height:90vh;overflow-y:auto;transform:translateY(100%);transition:transform .25s cubic-bezier(.32,1,.34,.98)}
+.overlay.open .modal{transform:translateY(0)}
+.modal-handle{width:40px;height:4px;background:var(--border-dark);border-radius:99px;margin:0 auto 20px}
+.modal-title{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:18px}
+
+.form-group{margin-bottom:14px}
+.form-label{font-size:.75rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:block}
+.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r);
+  font-size:.9rem;outline:none;background:var(--surface);font-family:inherit;color:var(--text);transition:border .15s}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,122,42,.12)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.purpose-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.purpose-btn{padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);
+  cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:600;color:var(--text2);
+  display:flex;align-items:center;gap:8px;transition:all .15s;text-align:left}
+.purpose-btn:hover{border-color:var(--accent)}
+.purpose-btn.sel-business{background:var(--yellow-bg);border-color:var(--yellow);color:var(--yellow-dark)}
+.purpose-btn.sel-medical{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.purpose-btn.sel-charity{background:var(--green-bg);border-color:var(--green);color:var(--green-dark)}
+.purpose-btn.sel-other{background:var(--gray-bg);border-color:var(--gray);color:var(--gray)}
+.purpose-btn svg{width:15px;height:15px;flex-shrink:0}
+
+.dist-status{font-size:.72rem;display:flex;align-items:center;gap:5px;margin-top:6px;min-height:18px;transition:all .2s}
+.dist-status.loading{color:var(--text3)}.dist-status.ok{color:var(--green)}.dist-status.err{color:var(--red)}
+.dist-spinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.info-banner{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:.75rem;color:var(--text2)}
+.info-banner svg{width:14px;height:14px;flex-shrink:0;color:var(--accent)}
+
+.modal-footer{display:flex;gap:10px;margin-top:20px}
+.modal-footer .btn{flex:1;justify-content:center}
+
+.report-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.78rem}
+.report-table th{background:var(--brand);color:#fff;padding:8px 10px;text-align:left;font-size:.69rem;text-transform:uppercase;letter-spacing:.05em}
+.report-table td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.report-table tr:last-child td{border-bottom:none}
+.report-table tr:nth-child(even) td{background:var(--surface2)}
+.report-total{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;
+  background:var(--brand);color:#fff;border-radius:10px;margin-top:12px;font-weight:700}
+
+.empty{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-icon{width:56px;height:56px;border-radius:16px;background:var(--surface2);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.empty-icon svg{width:26px;height:26px}
+.empty h3{font-size:.9rem;font-weight:700;color:var(--text2);margin-bottom:4px}
+.empty p{font-size:.78rem}
+
+.month-header{font-size:.75rem;font-weight:700;color:var(--text3);text-transform:uppercase;
+  letter-spacing:.08em;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+.month-header::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.setup-screen{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
+.setup-card{background:var(--surface);border-radius:20px;padding:32px 28px;max-width:400px;width:100%;box-shadow:var(--sh-lg);text-align:center}
+.setup-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--brand-light));
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff}
+.setup-title{font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:6px}
+.setup-sub{font-size:.83rem;color:var(--text3);margin-bottom:24px;line-height:1.5}
+
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#1C1209;color:#fff;padding:10px 18px;border-radius:99px;font-size:.8rem;font-weight:600;
+  box-shadow:var(--sh-lg);opacity:0;transition:all .25s;z-index:300;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Google autocomplete styling */
+.pac-container{z-index:9999!important;border-radius:0 0 10px 10px!important;
+  font-family:'DM Sans',sans-serif!important;box-shadow:var(--sh)!important}
+.pac-item{padding:8px 14px!important;font-size:.83rem!important;cursor:pointer!important}
+
+@media(max-width:600px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .form-row{grid-template-columns:1fr}
+  .stat-num{font-size:1.4rem}
+  .trip-route{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP (first time only) -->
+<div class="setup-screen" id="setup-screen">
+  <div class="setup-card">
+    <div class="setup-logo">
+      <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5 18 1 16 1 14.5 2.5L11 6 2.8 4.2l-2.3 2.3 5.1 5.1L3.5 14l-1 3.5L6 17l1.5 1.5 3.5-1 2.1-2.4 5.1 5.1 2.3-2.3z"/></svg>
+    </div>
+    <div class="setup-title">Mile Tracker</div>
+    <div class="setup-sub">Enter your name so your monthly reports are labeled correctly for submission.</div>
+    <div class="form-group" style="text-align:left">
+      <label class="form-label">Your Full Name</label>
+      <input type="text" class="form-input" id="setup-name" placeholder="e.g. Aaron Soto" style="font-size:1rem">
+    </div>
+    <div class="form-group" style="text-align:left">
+      <label class="form-label">Organization (optional)</label>
+      <input type="text" class="form-input" id="setup-org" placeholder="e.g. Latino Built">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:.95rem;margin-top:4px" onclick="completeSetup()">Get Started</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-icon">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5 18 1 16 1 14.5 2.5L11 6 2.8 4.2l-2.3 2.3 5.1 5.1L3.5 14l-1 3.5L6 17l1.5 1.5 3.5-1 2.1-2.4 5.1 5.1 2.3-2.3z"/></svg>
+    </div>
+    <div>
+      <div class="topbar-title">Mile Tracker</div>
+      <div class="topbar-sub" id="topbar-sub">Loading...</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost btn-sm" onclick="openSettings()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <button class="btn btn-ghost btn-sm" onclick="openReport()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+      Report
+    </button>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-icon-wrap ic-orange"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5 18 1 16 1 14.5 2.5L11 6 2.8 4.2l-2.3 2.3 5.1 5.1L3.5 14l-1 3.5L6 17l1.5 1.5 3.5-1 2.1-2.4 5.1 5.1 2.3-2.3z"/></svg></div>
+    <div class="stat-num" id="stat-trips">0</div>
+    <div class="stat-label">Trips This Month</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon-wrap ic-blue"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+    <div class="stat-num" id="stat-miles">0.0</div>
+    <div class="stat-label">Total Miles</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon-wrap ic-green"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+    <div class="stat-num" id="stat-value">$0.00</div>
+    <div class="stat-label">Est. Reimbursement</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon-wrap ic-orange"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+    <div class="stat-num" id="stat-days">0</div>
+    <div class="stat-label">Days Logged</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-area">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+      <input type="text" placeholder="Search trips..." id="search-input" oninput="renderList()">
+    </div>
+    <div class="pills">
+      <button class="pill active" onclick="filterPurpose('all',this)">All</button>
+      <button class="pill" onclick="filterPurpose('business',this)">Business</button>
+      <button class="pill" onclick="filterPurpose('medical',this)">Medical</button>
+      <button class="pill" onclick="filterPurpose('charity',this)">Charity</button>
+    </div>
+  </div>
+  <div id="trip-list-container"></div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openModal()">
+  <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<!-- ADD TRIP MODAL -->
+<div class="overlay" id="add-overlay" onclick="if(event.target.id==='add-overlay')closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title">Log a Trip</div>
+
+    <!-- IRS rate info -->
+    <div class="info-banner">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>2026 IRS rates: <strong>Business 72.5¢/mi</strong> &bull; Medical 20.5¢/mi &bull; Charity 14¢/mi</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Purpose</label>
+      <div class="purpose-grid">
+        <button class="purpose-btn" id="pb-business" onclick="selectPurpose('business')">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <div><div>Business</div><div style="font-size:.68rem;opacity:.75">72.5¢ / mile</div></div>
+        </button>
+        <button class="purpose-btn" id="pb-medical" onclick="selectPurpose('medical')">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <div><div>Medical</div><div style="font-size:.68rem;opacity:.75">20.5¢ / mile</div></div>
+        </button>
+        <button class="purpose-btn" id="pb-charity" onclick="selectPurpose('charity')">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <div><div>Charity</div><div style="font-size:.68rem;opacity:.75">14¢ / mile</div></div>
+        </button>
+        <button class="purpose-btn" id="pb-other" onclick="selectPurpose('other')">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div><div>Other</div><div style="font-size:.68rem;opacity:.75">Custom rate</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-input" id="f-date">
+      </div>
+      <div class="form-group" id="custom-rate-group" style="display:none">
+        <label class="form-label">Custom Rate ($/mi)</label>
+        <input type="number" class="form-input" id="f-custom-rate" placeholder="0.725" step="0.001" min="0" value="0.725">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">From - Start Address</label>
+      <input type="text" class="form-input" id="f-from" placeholder="Start typing an address..." autocomplete="off" oninput="scheduleDist()">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">To - Destination</label>
+      <input type="text" class="form-input" id="f-to" placeholder="Start typing an address..." autocomplete="off" oninput="scheduleDist()">
+      <div class="dist-status" id="dist-status"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Miles Driven
+        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> (auto-filled from addresses above, or type manually)</span>
+      </label>
+      <div style="display:flex;gap:8px">
+        <input type="number" class="form-input" id="f-miles" placeholder="e.g. 14.2" step="0.1" min="0" style="flex:1">
+        <button class="btn btn-outline btn-sm" onclick="calcDistance()" style="flex-shrink:0">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Recalc
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Client / Notes (optional)</label>
+      <input type="text" class="form-input" id="f-notes" placeholder="e.g. Maria Garcia - home assessment">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Quick-fill Saved Addresses
+        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> (tap to fill From or To)</span>
+      </label>
+      <div id="saved-locations-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTrip()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Save Trip
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="overlay" id="settings-overlay" onclick="if(event.target.id==='settings-overlay')closeSettings()">
+  <div class="modal" style="max-height:75vh">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Settings</div>
+    <div class="form-group">
+      <label class="form-label">Your Full Name</label>
+      <input type="text" class="form-input" id="s-name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Organization</label>
+      <input type="text" class="form-input" id="s-org">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Saved Addresses
+        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> (tap X to remove)</span>
+      </label>
+      <div id="settings-saved-list" style="display:flex;flex-direction:column;gap:5px;margin-top:4px;max-height:180px;overflow-y:auto"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="overlay" id="report-overlay" onclick="if(event.target.id==='report-overlay')closeReport()">
+  <div class="modal" style="max-height:88vh">
+    <div class="modal-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap">
+      <div class="modal-title" style="margin:0" id="report-title">Monthly Report</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm" onclick="downloadCSV()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          CSV
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="printReport()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print / PDF
+        </button>
+      </div>
+    </div>
+    <div id="report-month-selector" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"></div>
+    <div id="report-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeReport()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 2026 IRS RATES =====
+const IRS_RATES = { business:0.725, medical:0.205, charity:0.14, other:0.725 };
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONS   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const PL     = {business:'Business',medical:'Medical',charity:'Charity',other:'Other'};
+
+let trips          = JSON.parse(localStorage.getItem('mt_trips')     || '[]');
+let savedLocs      = JSON.parse(localStorage.getItem('mt_saved_locs')|| '[]');
+let userName       = localStorage.getItem('mt_name') || '';
+let userOrg        = localStorage.getItem('mt_org')  || '';
+let editId         = null;
+let curPurpose     = 'business';
+let activeFilter   = 'all';
+let activeMonth    = null;
+let mapsReady      = false;
+let distTimer      = null;
+
+// ===== BOOT =====
+function init(){
+  if(!userName){ document.getElementById('setup-screen').style.display='flex'; }
+  else { document.getElementById('setup-screen').style.display='none'; loadApp(); }
+}
+
+function completeSetup(){
+  const n = document.getElementById('setup-name').value.trim();
+  if(!n){ showToast('Please enter your name'); return; }
+  userName = n; userOrg = document.getElementById('setup-org').value.trim();
+  localStorage.setItem('mt_name',userName); localStorage.setItem('mt_org',userOrg);
+  document.getElementById('setup-screen').style.display='none';
+  loadApp();
+}
+
+function loadApp(){
+  const now = new Date();
+  document.getElementById('topbar-sub').textContent = userName + ' \u2022 ' + MONTHS[now.getMonth()]+' '+now.getFullYear();
+  document.getElementById('f-date').value = now.toISOString().slice(0,10);
+  updateStats(); renderList(); renderSavedChips();
+  loadMaps();
+}
+
+// ===== MAPS =====
+function loadMaps(){
+  // Using a public demo key - works for moderate use
+  // For production with 10 people, get a free Google Maps API key at console.cloud.google.com
+  const s = document.createElement('script');
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&libraries=places&callback=mapsLoaded';
+  s.async = true;
+  s.onerror = ()=>{ setDistStatus('err','Maps unavailable - enter miles manually'); };
+  document.head.appendChild(s);
+}
+
+window.mapsLoaded = function(){
+  mapsReady = true;
+  const opts = { types:['address'], componentRestrictions:{country:'us'} };
+  const ac1 = new google.maps.places.Autocomplete(document.getElementById('f-from'), opts);
+  const ac2 = new google.maps.places.Autocomplete(document.getElementById('f-to'),   opts);
+  ac1.addListener('place_changed', ()=>{ clearTimeout(distTimer); setTimeout(calcDistance,300); });
+  ac2.addListener('place_changed', ()=>{ clearTimeout(distTimer); setTimeout(calcDistance,300); });
+};
+
+function scheduleDist(){
+  clearTimeout(distTimer);
+  distTimer = setTimeout(()=>{ if(mapsReady) calcDistance(); }, 1200);
+}
+
+function calcDistance(){
+  if(!mapsReady) return;
+  const from = document.getElementById('f-from').value.trim();
+  const to   = document.getElementById('f-to').value.trim();
+  if(!from || !to || from.length < 5 || to.length < 5) return;
+
+  setDistStatus('loading','Calculating distance...');
+  new google.maps.DistanceMatrixService().getDistanceMatrix({
+    origins:[from], destinations:[to],
+    travelMode: google.maps.TravelMode.DRIVING,
+    unitSystem: google.maps.UnitSystem.IMPERIAL
+  }, (res, status)=>{
+    if(status==='OK' && res.rows[0].elements[0].status==='OK'){
+      const el = res.rows[0].elements[0];
+      const miles = (el.distance.value * 0.000621371).toFixed(1);
+      document.getElementById('f-miles').value = miles;
+      setDistStatus('ok', el.distance.text + ' \u2022 ' + el.duration.text + ' drive');
+    } else {
+      setDistStatus('err','Could not calculate - enter miles manually');
+    }
+  });
+}
+
+function setDistStatus(type, msg){
+  const el = document.getElementById('dist-status');
+  const icons = {
+    loading:'<div class="dist-spinner"></div>',
+    ok:'<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+    err:'<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+  };
+  el.innerHTML = (icons[type]||'') + '<span>'+msg+'</span>';
+  el.className = 'dist-status ' + type;
+}
+
+// ===== STATS =====
+function getRate(t){ return t.purpose==='other'?(parseFloat(t.customRate)||IRS_RATES.business):(IRS_RATES[t.purpose]||IRS_RATES.business); }
+
+function updateStats(){
+  const now=new Date(), m=now.getMonth(), y=now.getFullYear();
+  const mt = trips.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getMonth()===m&&d.getFullYear()===y; });
+  const miles = mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
+  const val   = mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
+  document.getElementById('stat-trips').textContent = mt.length;
+  document.getElementById('stat-miles').textContent = miles.toFixed(1);
+  document.getElementById('stat-value').textContent = '$'+val.toFixed(2);
+  document.getElementById('stat-days').textContent  = new Set(mt.map(t=>t.date)).size;
+}
+
+// ===== LIST =====
+function renderList(){
+  const q=(document.getElementById('search-input').value||'').toLowerCase();
+  let filtered = trips.filter(t=>{
+    const mp = activeFilter==='all'||t.purpose===activeFilter;
+    const ms = !q||(t.from||'').toLowerCase().includes(q)||(t.to||'').toLowerCase().includes(q)||(t.notes||'').toLowerCase().includes(q);
+    return mp&&ms;
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+
+  const el = document.getElementById('trip-list-container');
+  if(!filtered.length){
+    el.innerHTML=`<div class="empty"><div class="empty-icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5 18 1 16 1 14.5 2.5L11 6 2.8 4.2l-2.3 2.3 5.1 5.1L3.5 14l-1 3.5L6 17l1.5 1.5 3.5-1 2.1-2.4 5.1 5.1 2.3-2.3z"/></svg></div><h3>No trips logged yet</h3><p>Tap the + button to log your first trip.</p></div>`;
+    return;
+  }
+
+  const groups={};
+  filtered.forEach(t=>{
+    const d=new Date(t.date+'T12:00:00');
+    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    const label=MONTHS[d.getMonth()]+' '+d.getFullYear();
+    if(!groups[key]) groups[key]={label,trips:[]};
+    groups[key].trips.push(t);
+  });
+
+  let html='';
+  Object.keys(groups).sort((a,b)=>b.localeCompare(a)).forEach(key=>{
+    const g=groups[key];
+    const gm=g.trips.reduce((s,t)=>s+parseFloat(t.miles||0),0);
+    const gv=g.trips.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
+    html+=`<div class="month-header">${g.label} <span style="font-weight:500">${gm.toFixed(1)} mi &bull; $${gv.toFixed(2)}</span></div><div class="trip-list">`;
+    g.trips.forEach(t=>{
+      const d=new Date(t.date+'T12:00:00');
+      const p=t.purpose||'business';
+      const mi=parseFloat(t.miles||0);
+      const val=(mi*getRate(t)).toFixed(2);
+      html+=`<div class="trip-row purpose-${p}">
+        <div class="date-badge db-purpose-${p}"><div class="db-mon">${MONS[d.getMonth()]}</div><div class="db-day">${d.getDate()}</div></div>
+        <div class="trip-info">
+          <div class="trip-name">${DAYS[d.getDay()]} <span class="badge badge-${p}">${PL[p]}</span></div>
+          ${t.notes?`<div style="font-size:.78rem;font-weight:600;color:var(--text2);margin-top:2px">${t.notes}</div>`:''}
+          <div class="trip-route">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${t.from||'Start'}
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin:0 2px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            ${t.to||'Destination'}
+          </div>
+        </div>
+        <div class="trip-actions">
+          <div style="text-align:right">
+            <div class="miles-badge">${mi.toFixed(1)} mi</div>
+            <div style="font-size:.67rem;color:var(--green);font-weight:700;margin-top:3px">$${val}</div>
+          </div>
+          <button class="btn btn-xs btn-outline btn-icon" onclick="editTrip('${t.id}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="btn btn-xs btn-danger btn-icon" onclick="deleteTrip('${t.id}')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+function filterPurpose(p,btn){
+  activeFilter=p;
+  document.querySelectorAll('.pill').forEach(e=>e.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
+
+// ===== MODAL =====
+function openModal(trip){
+  editId=null; curPurpose='business';
+  document.getElementById('modal-title').textContent='Log a Trip';
+  document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
+  ['f-miles','f-from','f-to','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-custom-rate').value='0.725';
+  document.getElementById('dist-status').innerHTML='';
+  document.getElementById('dist-status').className='dist-status';
+  document.getElementById('custom-rate-group').style.display='none';
+  selectPurpose('business');
+  if(trip){
+    editId=trip.id;
+    document.getElementById('modal-title').textContent='Edit Trip';
+    document.getElementById('f-date').value=trip.date;
+    document.getElementById('f-miles').value=trip.miles;
+    document.getElementById('f-from').value=trip.from||'';
+    document.getElementById('f-to').value=trip.to||'';
+    document.getElementById('f-notes').value=trip.notes||'';
+    if(trip.customRate) document.getElementById('f-custom-rate').value=trip.customRate;
+    selectPurpose(trip.purpose||'business');
+  }
+  renderSavedChips();
+  document.getElementById('add-overlay').classList.add('open');
+}
+function closeModal(){ document.getElementById('add-overlay').classList.remove('open'); }
+
+function selectPurpose(p){
+  curPurpose=p;
+  ['business','medical','charity','other'].forEach(x=>document.getElementById('pb-'+x).className='purpose-btn'+(x===p?' sel-'+x:''));
+  document.getElementById('custom-rate-group').style.display=p==='other'?'block':'none';
+}
+
+// ===== SAVE =====
+function saveTrip(){
+  const date=document.getElementById('f-date').value;
+  const miles=parseFloat(document.getElementById('f-miles').value);
+  const from=document.getElementById('f-from').value.trim();
+  const to=document.getElementById('f-to').value.trim();
+  const notes=document.getElementById('f-notes').value.trim();
+  const customRate=curPurpose==='other'?parseFloat(document.getElementById('f-custom-rate').value):null;
+  if(!date){showToast('Select a date');return;}
+  if(!miles||miles<=0){showToast('Enter valid mileage');return;}
+  if(!from||!to){showToast('Enter start and destination');return;}
+  [from,to].forEach(loc=>{ if(loc&&!savedLocs.includes(loc)){ savedLocs.push(loc); localStorage.setItem('mt_saved_locs',JSON.stringify(savedLocs)); } });
+  const data={date,miles,from,to,notes,purpose:curPurpose,customRate};
+  if(editId){ const i=trips.findIndex(t=>t.id===editId); if(i>-1) trips[i]={...trips[i],...data}; }
+  else trips.push({id:Date.now().toString(),...data});
+  localStorage.setItem('mt_trips',JSON.stringify(trips));
+  closeModal(); updateStats(); renderList(); showToast(editId?'Trip updated':'Trip saved!');
+}
+
+function editTrip(id){ const t=trips.find(t=>t.id===id); if(t) openModal(t); }
+function deleteTrip(id){ if(!confirm('Delete this trip?')) return; trips=trips.filter(t=>t.id!==id); localStorage.setItem('mt_trips',JSON.stringify(trips)); updateStats(); renderList(); showToast('Deleted'); }
+
+// ===== SAVED CHIPS =====
+function renderSavedChips(){
+  const el=document.getElementById('saved-locations-list');
+  if(!savedLocs.length){ el.innerHTML='<span style="font-size:.74rem;color:var(--text3)">Addresses you enter will appear here for quick-fill.</span>'; return; }
+  el.innerHTML=savedLocs.slice(-12).reverse().map(loc=>`<button class="pill" style="font-size:.68rem;padding:5px 10px" onclick="quickFill('${loc.replace(/'/g,"\\'")}')"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${loc.length>30?loc.slice(0,28)+'...':loc}</button>`).join('');
+}
+
+function quickFill(loc){
+  const f=document.getElementById('f-from'), t=document.getElementById('f-to');
+  if(!f.value){ f.value=loc; } else { t.value=loc; setTimeout(calcDistance,200); }
+}
+
+// ===== SETTINGS =====
+function openSettings(){
+  document.getElementById('s-name').value=userName;
+  document.getElementById('s-org').value=userOrg;
+  renderSettingsSaved();
+  document.getElementById('settings-overlay').classList.add('open');
+}
+function closeSettings(){ document.getElementById('settings-overlay').classList.remove('open'); }
+function saveSettings(){
+  const n=document.getElementById('s-name').value.trim();
+  if(!n){showToast('Name required');return;}
+  userName=n; userOrg=document.getElementById('s-org').value.trim();
+  localStorage.setItem('mt_name',userName); localStorage.setItem('mt_org',userOrg);
+  const now=new Date();
+  document.getElementById('topbar-sub').textContent=userName+' \u2022 '+MONTHS[now.getMonth()]+' '+now.getFullYear();
+  closeSettings(); showToast('Settings saved');
+}
+function renderSettingsSaved(){
+  const el=document.getElementById('settings-saved-list');
+  if(!savedLocs.length){ el.innerHTML='<span style="font-size:.75rem;color:var(--text3)">No saved locations yet.</span>'; return; }
+  el.innerHTML=savedLocs.map((loc,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--text2);gap:8px"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${loc}</span><button onclick="removeLoc(${i})" style="background:none;border:none;cursor:pointer;color:var(--red);font-weight:700;font-size:.8rem;flex-shrink:0">X</button></div>`).join('');
+}
+function removeLoc(i){ savedLocs.splice(i,1); localStorage.setItem('mt_saved_locs',JSON.stringify(savedLocs)); renderSettingsSaved(); renderSavedChips(); showToast('Removed'); }
+
+// ===== REPORT =====
+function getReportMonths(){
+  const s=new Set(); trips.forEach(t=>{ const d=new Date(t.date+'T12:00:00'); s.add(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')); });
+  const now=new Date(); s.add(now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'));
+  return [...s].sort((a,b)=>b.localeCompare(a));
+}
+
+function openReport(){
+  const months=getReportMonths(), now=new Date();
+  const cur=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  activeMonth=months.includes(cur)?cur:months[0];
+  renderMonthPills(months); renderReportBody();
+  document.getElementById('report-overlay').classList.add('open');
+}
+function closeReport(){ document.getElementById('report-overlay').classList.remove('open'); }
+
+function renderMonthPills(months){
+  document.getElementById('report-month-selector').innerHTML=months.map(m=>{
+    const [yr,mo]=m.split('-');
+    return `<button class="pill ${m===activeMonth?'active':''}" onclick="pickMonth('${m}',this)">${MONS[parseInt(mo)-1]} ${yr}</button>`;
+  }).join('');
+}
+
+function pickMonth(m,btn){
+  activeMonth=m;
+  document.querySelectorAll('#report-month-selector .pill').forEach(e=>e.classList.remove('active'));
+  btn.classList.add('active');
+  renderReportBody();
+}
+
+function renderReportBody(){
+  const [yr,mo]=activeMonth.split('-');
+  const month=parseInt(mo)-1, year=parseInt(yr);
+  const label=MONTHS[month]+' '+year;
+  document.getElementById('report-title').textContent=label+' Report';
+  const mt=trips.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getMonth()===month&&d.getFullYear()===year; }).sort((a,b)=>a.date.localeCompare(b.date));
+  const totMi=mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
+  const totVal=mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
+  const el=document.getElementById('report-body');
+  if(!mt.length){ el.innerHTML=`<div class="empty" style="padding:24px"><h3>No trips for ${label}</h3></div>`; return; }
+  el.innerHTML=`
+    <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.8rem">
+      <strong>${userName}</strong>${userOrg?' &bull; '+userOrg:''} &bull; ${label}
+    </div>
+    <table class="report-table">
+      <thead><tr><th>Date</th><th>Purpose</th><th>From</th><th>To</th><th>Notes</th><th style="text-align:right">Miles</th><th style="text-align:right">Rate</th><th style="text-align:right">Amount</th></tr></thead>
+      <tbody>${mt.map(t=>{ const d=new Date(t.date+'T12:00:00'); const mi=parseFloat(t.miles||0); const r=getRate(t);
+        return `<tr><td>${(d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear()}</td><td>${PL[t.purpose||'business']}</td>
+          <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.from||''}</td>
+          <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.to||''}</td>
+          <td>${t.notes||''}</td>
+          <td style="text-align:right;font-family:'DM Mono',monospace">${mi.toFixed(1)}</td>
+          <td style="text-align:right;font-family:'DM Mono',monospace">$${r.toFixed(3)}</td>
+          <td style="text-align:right;font-family:'DM Mono',monospace">$${(mi*r).toFixed(2)}</td></tr>`;
+      }).join('')}</tbody>
+    </table>
+    <div class="report-total"><span>${mt.length} trips</span><span>${totMi.toFixed(1)} mi &bull; $${totVal.toFixed(2)}</span></div>`;
+}
+
+// ===== DOWNLOAD CSV =====
+function downloadCSV(){
+  const [yr,mo]=activeMonth.split('-');
+  const month=parseInt(mo)-1, year=parseInt(yr);
+  const mt=trips.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getMonth()===month&&d.getFullYear()===year; }).sort((a,b)=>a.date.localeCompare(b.date));
+  const rows=[['Name','Organization','Date','Purpose','From','To','Notes / Client','Miles','Rate ($/mi)','Amount ($)']];
+  mt.forEach(t=>{ const mi=parseFloat(t.miles||0), r=getRate(t); rows.push([userName,userOrg,t.date,PL[t.purpose||'business'],t.from||'',t.to||'',t.notes||'',mi.toFixed(1),r.toFixed(3),(mi*r).toFixed(2)]); });
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`MileTracker_${userName.replace(/\s+/g,'_')}_${MONTHS[month]}_${year}.csv`; a.click();
+}
+
+// ===== PRINT =====
+function printReport(){
+  const [yr,mo]=activeMonth.split('-');
+  const month=parseInt(mo)-1, year=parseInt(yr);
+  const label=MONTHS[month]+' '+year;
+  const mt=trips.filter(t=>{ const d=new Date(t.date+'T12:00:00'); return d.getMonth()===month&&d.getFullYear()===year; }).sort((a,b)=>a.date.localeCompare(b.date));
+  const totMi=mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
+  const totVal=mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
+  const pw=window.open('','_blank');
+  pw.document.write(`<!DOCTYPE html><html><head><title>${userName} - Mileage ${label}</title>
+  <style>
+    @page{margin:.75in} body{font-family:Arial,sans-serif;color:#1C1209;font-size:12px}
+    .hdr{border-bottom:3px solid #6B2D0F;padding-bottom:14px;margin-bottom:20px}
+    .hdr h1{font-size:20px;color:#6B2D0F;margin:0 0 4px} .hdr .sub{color:#9C7B6B;font-size:11px}
+    .meta{display:flex;gap:28px;margin-bottom:18px;flex-wrap:wrap}
+    .mi label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9C7B6B;display:block;margin-bottom:2px}
+    .mi span{font-size:13px;font-weight:700}
+    table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px}
+    th{background:#6B2D0F;color:#fff;padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+    td{padding:7px 8px;border-bottom:1px solid #E8DDD4;color:#5C4033}
+    tr:nth-child(even) td{background:#FDF8F4}
+    .tot{background:#6B2D0F;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;font-weight:700;font-size:13px;border-radius:6px;margin-top:8px}
+    .sigs{margin-top:40px;display:flex;gap:40px}
+    .sig{flex:1} .sig .ln{border-bottom:1px solid #1C1209;height:30px;margin-bottom:4px}
+    .sig .lb{font-size:10px;color:#9C7B6B;text-transform:uppercase;letter-spacing:.04em}
+    .ft{margin-top:24px;font-size:10px;color:#9C7B6B;border-top:1px solid #E8DDD4;padding-top:10px;text-align:center}
+  </style></head><body>
+  <div class="hdr"><h1>Mileage Reimbursement Report</h1><div class="sub">2026 IRS Standard Mileage Rates &bull; Generated ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div></div>
+  <div class="meta">
+    <div class="mi"><label>Employee</label><span>${userName}</span></div>
+    ${userOrg?`<div class="mi"><label>Organization</label><span>${userOrg}</span></div>`:''}
+    <div class="mi"><label>Period</label><span>${label}</span></div>
+    <div class="mi"><label>Total Trips</label><span>${mt.length}</span></div>
+    <div class="mi"><label>Total Miles</label><span>${totMi.toFixed(1)}</span></div>
+    <div class="mi"><label>Total Reimbursement</label><span style="color:#6B2D0F">$${totVal.toFixed(2)}</span></div>
+  </div>
+  <table><thead><tr><th>Date</th><th>Purpose</th><th>From</th><th>To</th><th>Notes / Client</th><th style="text-align:right">Miles</th><th style="text-align:right">Rate</th><th style="text-align:right">Amount</th></tr></thead>
+  <tbody>${mt.map(t=>{ const d=new Date(t.date+'T12:00:00'); const mi=parseFloat(t.miles||0),r=getRate(t);
+    return `<tr><td>${(d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear()}</td><td>${PL[t.purpose||'business']}</td><td>${t.from||''}</td><td>${t.to||''}</td><td>${t.notes||''}</td><td style="text-align:right">${mi.toFixed(1)}</td><td style="text-align:right">$${r.toFixed(3)}</td><td style="text-align:right">$${(mi*r).toFixed(2)}</td></tr>`;
+  }).join('')}</tbody></table>
+  <div class="tot"><span>${mt.length} trips &bull; 2026 IRS Rates</span><span>${totMi.toFixed(1)} mi &bull; $${totVal.toFixed(2)}</span></div>
+  <div class="sigs">
+    <div class="sig"><div class="ln"></div><div class="lb">Employee Signature</div></div>
+    <div class="sig"><div class="ln"></div><div class="lb">Supervisor Approval</div></div>
+    <div class="sig"><div class="ln"></div><div class="lb">Date</div></div>
+  </div>
+  <div class="ft">Mile Tracker &bull; ${userName}${userOrg?' &bull; '+userOrg:''} &bull; ${label}</div>
+  <script>window.onload=function(){window.print()}<\/script></body></html>`);
+  pw.document.close();
+}
+
+// ===== TOAST =====
+function showToast(msg){ const e=document.getElementById('toast'); e.textContent=msg; e.classList.add('show'); setTimeout(()=>e.classList.remove('show'),2200); }
+
+init();
+</script>
+</body>
+</html>
