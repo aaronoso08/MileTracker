@@ -152,6 +152,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .dist-status{font-size:.72rem;display:flex;align-items:center;gap:5px;margin-top:6px;min-height:18px}
 .dist-status.loading{color:var(--text3)}.dist-status.ok{color:var(--green)}.dist-status.err{color:var(--red-dark)}
 
+/* ROUND TRIP TOGGLE */
+.rt-toggle-wrap{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;cursor:pointer;transition:all .15s}
+.rt-toggle-wrap:hover{border-color:var(--accent)}
+.rt-toggle-wrap.active{background:var(--yellow-bg);border-color:var(--yellow)}
+.rt-toggle-label{display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;color:var(--text2)}
+.rt-toggle-label svg{width:15px;height:15px;color:var(--text3)}
+.rt-toggle-wrap.active .rt-toggle-label svg{color:var(--yellow-dark)}
+.rt-toggle-wrap.active .rt-toggle-label{color:var(--yellow-dark)}
+.rt-badge{font-size:.65rem;font-weight:700;background:var(--yellow);color:#fff;border-radius:99px;padding:2px 7px;text-transform:uppercase;letter-spacing:.04em}
+.toggle-switch{width:36px;height:20px;background:var(--border-dark);border-radius:99px;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-switch::after{content:'';position:absolute;left:3px;top:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.rt-toggle-wrap.active .toggle-switch{background:var(--yellow)}
+.rt-toggle-wrap.active .toggle-switch::after{transform:translateX(16px)}
+
 /* INFO BANNER */
 .info-banner{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;
   display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:.75rem;color:var(--text2);flex-wrap:wrap}
@@ -362,6 +376,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="dist-status" id="dist-status"></div>
     </div>
 
+    <!-- ROUND TRIP TOGGLE -->
+    <div class="rt-toggle-wrap" id="rt-toggle" onclick="toggleRoundTrip()">
+      <div class="rt-toggle-label">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Round Trip
+        <span class="rt-badge" id="rt-badge" style="display:none">2x</span>
+      </div>
+      <div class="toggle-switch" id="rt-switch"></div>
+    </div>
+
     <!-- MILES -->
     <div class="form-group">
       <label class="form-label">Miles Driven
@@ -511,6 +535,7 @@ let editId     = null;
 let curPurpose = 'business';
 let activeFilter = 'all';
 let activeMonth  = null;
+let isRoundTrip  = false;
 
 // Autocomplete state
 const acState = {
@@ -634,6 +659,22 @@ function closeAc(field){
 // ============================================================
 // DISTANCE CALCULATION  (OSRM)
 // ============================================================
+function toggleRoundTrip(){
+  isRoundTrip = !isRoundTrip;
+  const wrap = document.getElementById('rt-toggle');
+  const badge = document.getElementById('rt-badge');
+  wrap.classList.toggle('active', isRoundTrip);
+  badge.style.display = isRoundTrip ? 'inline' : 'none';
+  // If there's already a miles value, double or halve it
+  const milesEl = document.getElementById('f-miles');
+  const cur = parseFloat(milesEl.value);
+  if(cur > 0){
+    milesEl.value = isRoundTrip ? (cur * 2).toFixed(1) : (cur / 2).toFixed(1);
+  }
+  // Re-run dist calc if coords available
+  if(acState.from.coords && acState.to.coords) calcDist();
+}
+
 function maybCalcDist(){
   if(acState.from.coords && acState.to.coords) calcDist();
 }
@@ -648,10 +689,12 @@ async function calcDist(){
   setDistStatus('loading', 'Calculating driving distance...');
   try {
     const { miles, seconds } = await osrmRoute(fromCoords, toCoords);
-    document.getElementById('f-miles').value = miles.toFixed(1);
+    const finalMiles = isRoundTrip ? miles * 2 : miles;
+    document.getElementById('f-miles').value = finalMiles.toFixed(1);
     const mins = Math.round(seconds / 60);
     const timeStr = mins >= 60 ? `${Math.floor(mins/60)}h ${mins%60}m` : `${mins} min`;
-    setDistStatus('ok', `${miles.toFixed(1)} mi \u2022 ~${timeStr} drive`);
+    const rtNote = isRoundTrip ? ` \u2022 Round trip (${miles.toFixed(1)} mi each way)` : '';
+    setDistStatus('ok', `${finalMiles.toFixed(1)} mi \u2022 ~${timeStr} drive${rtNote}`);
   } catch(e){
     setDistStatus('err', 'Could not calculate route - enter miles manually');
   }
@@ -732,7 +775,7 @@ function renderList(){
       html += `<div class="trip-row purpose-${p}">
         <div class="date-badge db-purpose-${p}"><div class="db-mon">${MONS[d.getMonth()]}</div><div class="db-day">${d.getDate()}</div></div>
         <div class="trip-info">
-          <div class="trip-name">${DAYS[d.getDay()]} <span class="badge badge-${p}">${PL[p]}</span></div>
+          <div class="trip-name">${DAYS[d.getDay()]} <span class="badge badge-${p}">${PL[p]}</span>${t.roundTrip ? '<span class="badge" style="background:#FEF3C7;color:#92400E">Round Trip</span>' : ''}</div>
           ${t.notes ? `<div style="font-size:.78rem;font-weight:600;color:var(--text2);margin-top:2px">${t.notes}</div>` : ''}
           <div class="trip-route">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -771,7 +814,9 @@ function filterPurpose(p, btn){
 // MODAL OPEN / CLOSE
 // ============================================================
 function openModal(trip){
-  editId = null; curPurpose = 'business';
+  editId = null; curPurpose = 'business'; isRoundTrip = false;
+  document.getElementById('rt-toggle').classList.remove('active');
+  document.getElementById('rt-badge').style.display = 'none';
   document.getElementById('modal-title').textContent = 'Log a Trip';
   document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
   ['f-miles','f-from','f-to','f-notes'].forEach(id => document.getElementById(id).value = '');
@@ -795,6 +840,7 @@ function openModal(trip){
     if(trip.customRate) document.getElementById('f-custom-rate').value = trip.customRate;
     if(trip.fromCoords) acState.from.coords = trip.fromCoords;
     if(trip.toCoords)   acState.to.coords   = trip.toCoords;
+    if(trip.roundTrip){ isRoundTrip = true; document.getElementById('rt-toggle').classList.add('active'); document.getElementById('rt-badge').style.display = 'inline'; }
     selectPurpose(trip.purpose || 'business');
   }
   renderSavedChips();
@@ -835,6 +881,7 @@ function saveTrip(){
 
   const data = {
     date, miles, from, to, notes, purpose: curPurpose, customRate,
+    roundTrip: isRoundTrip,
     fromCoords: acState.from.coords,
     toCoords:   acState.to.coords
   };
