@@ -190,6 +190,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   box-shadow:var(--sh-lg);opacity:0;transition:all .25s;z-index:300;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+
+/* PRINT PREVIEW OVERLAY */
+.print-overlay{position:fixed;inset:0;background:#fff;z-index:500;overflow-y:auto;display:none;flex-direction:column}
+.print-overlay.open{display:flex}
+.print-toolbar{background:#6B2D0F;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px;position:sticky;top:0;z-index:10}
+.print-toolbar-title{font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem}
+.print-toolbar-hint{font-size:.72rem;opacity:.75}
+.print-content{padding:32px;max-width:800px;margin:0 auto;width:100%;font-family:Arial,sans-serif;font-size:12px;color:#1C1209;flex:1}
+.print-hdr{border-bottom:3px solid #6B2D0F;padding-bottom:14px;margin-bottom:20px}
+.print-hdr h1{font-size:20px;color:#6B2D0F;margin:0 0 4px;font-family:Arial,sans-serif}
+.print-hdr .sub{color:#9C7B6B;font-size:11px}
+.print-meta{display:flex;gap:24px;margin-bottom:18px;flex-wrap:wrap}
+.print-mi label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9C7B6B;display:block;margin-bottom:2px;font-family:Arial,sans-serif}
+.print-mi span{font-size:13px;font-weight:700;font-family:Arial,sans-serif}
+.print-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:11px}
+.print-table th{background:#6B2D0F;color:#fff;padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+.print-table td{padding:7px 8px;border-bottom:1px solid #E8DDD4;color:#5C4033}
+.print-table tr:nth-child(even) td{background:#FDF8F4}
+.print-tot{background:#6B2D0F;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;font-weight:700;font-size:13px;border-radius:6px;margin-top:8px;font-family:Arial,sans-serif}
+.print-sigs{margin-top:40px;display:flex;gap:40px}
+.print-sig{flex:1}.print-sig .ln{border-bottom:1px solid #1C1209;height:30px;margin-bottom:4px}
+.print-sig .lb{font-size:10px;color:#9C7B6B;text-transform:uppercase;letter-spacing:.04em;font-family:Arial,sans-serif}
+.print-ft{margin-top:24px;font-size:10px;color:#9C7B6B;border-top:1px solid #E8DDD4;padding-top:10px;text-align:center;font-family:Arial,sans-serif}
+@media print{
+  .print-toolbar{display:none!important}
+  .print-content{padding:0;max-width:100%}
+  body > *:not(.print-overlay){display:none!important}
+  .print-overlay{position:fixed;inset:0;overflow:visible}
+}
+
 @media(max-width:600px){
   .stats-row{grid-template-columns:repeat(2,1fr)}
   .form-row{grid-template-columns:1fr}
@@ -437,6 +467,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- PRINT FRAME - Safari safe, no window.open -->
 <iframe id="print-frame" style="display:none"></iframe>
+
+
+<!-- PRINT PREVIEW OVERLAY -->
+<div class="print-overlay" id="print-overlay">
+  <div class="print-toolbar">
+    <div>
+      <div class="print-toolbar-title">Mileage Report Preview</div>
+      <div class="print-toolbar-hint">Use your browser's Print or Share button to save as PDF</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button onclick="window.print()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print / Save PDF
+      </button>
+      <button onclick="closePrintOverlay()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:9px 14px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit">
+        Close
+      </button>
+    </div>
+  </div>
+  <div class="print-content" id="print-content"></div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -972,64 +1023,66 @@ function downloadCSV(userName, userOrg){
 }
 
 // ============================================================
-// PRINT (Safari-safe via iframe)
+// PRINT PREVIEW OVERLAY (works on Safari/iPhone/all browsers)
 // ============================================================
 function printReport(userName, userOrg){
   const [yr,mo]=activeMonth.split('-');
-  const month=parseInt(mo)-1,year=parseInt(yr),label=MONTHS[month]+' '+year;
+  const month=parseInt(mo)-1, year=parseInt(yr), label=MONTHS[month]+' '+year;
   const mt=trips.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===month&&d.getFullYear()===year;}).sort((a,b)=>a.date.localeCompare(b.date));
   const totMi=mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
   const totVal=mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
-  const html = `<!DOCTYPE html><html><head><title>${userName} - Mileage ${label}</title>
-  <style>
-    @page{margin:.75in}body{font-family:Arial,sans-serif;color:#1C1209;font-size:12px}
-    .hdr{border-bottom:3px solid #6B2D0F;padding-bottom:14px;margin-bottom:20px}
-    .hdr h1{font-size:20px;color:#6B2D0F;margin:0 0 4px}.hdr .sub{color:#9C7B6B;font-size:11px}
-    .meta{display:flex;gap:28px;margin-bottom:18px;flex-wrap:wrap}
-    .mi label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#9C7B6B;display:block;margin-bottom:2px}
-    .mi span{font-size:13px;font-weight:700}
-    table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px}
-    th{background:#6B2D0F;color:#fff;padding:7px 8px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
-    td{padding:7px 8px;border-bottom:1px solid #E8DDD4;color:#5C4033}
-    tr:nth-child(even) td{background:#FDF8F4}
-    .tot{background:#6B2D0F;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;font-weight:700;font-size:13px;border-radius:6px;margin-top:8px}
-    .sigs{margin-top:40px;display:flex;gap:40px}.sig{flex:1}.sig .ln{border-bottom:1px solid #1C1209;height:30px;margin-bottom:4px}
-    .sig .lb{font-size:10px;color:#9C7B6B;text-transform:uppercase;letter-spacing:.04em}
-    .ft{margin-top:24px;font-size:10px;color:#9C7B6B;border-top:1px solid #E8DDD4;padding-top:10px;text-align:center}
-  </style></head><body>
-  <div class="hdr"><h1>Mileage Reimbursement Report</h1><div class="sub">2026 IRS Standard Mileage Rates &bull; Generated ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div></div>
-  <div class="meta">
-    <div class="mi"><label>Employee</label><span>${userName}</span></div>
-    ${userOrg?`<div class="mi"><label>Organization</label><span>${userOrg}</span></div>`:''}
-    <div class="mi"><label>Period</label><span>${label}</span></div>
-    <div class="mi"><label>Total Trips</label><span>${mt.length}</span></div>
-    <div class="mi"><label>Total Miles</label><span>${totMi.toFixed(1)}</span></div>
-    <div class="mi"><label>Reimbursement</label><span style="color:#6B2D0F">$${totVal.toFixed(2)}</span></div>
-  </div>
-  <table><thead><tr><th>Date</th><th>Purpose</th><th>From</th><th>To</th><th>Notes / Client</th><th style="text-align:right">Miles</th><th style="text-align:right">Rate</th><th style="text-align:right">Amount</th></tr></thead>
-  <tbody>${mt.map(t=>{const d=new Date(t.date+'T12:00:00');const mi=parseFloat(t.miles||0),r=getRate(t);
-    return `<tr><td>${(d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear()}</td><td>${PL[t.purpose||'business']}</td><td>${t.from||''}</td><td>${t.to||''}</td><td>${t.notes||''}</td><td style="text-align:right">${mi.toFixed(1)}</td><td style="text-align:right">$${r.toFixed(3)}</td><td style="text-align:right">$${(mi*r).toFixed(2)}</td></tr>`;
-  }).join('')}</tbody></table>
-  <div class="tot"><span>${mt.length} trips &bull; 2026 IRS Rates</span><span>${totMi.toFixed(1)} mi &bull; $${totVal.toFixed(2)}</span></div>
-  <div class="sigs">
-    <div class="sig"><div class="ln"></div><div class="lb">Employee Signature</div></div>
-    <div class="sig"><div class="ln"></div><div class="lb">Supervisor Approval</div></div>
-    <div class="sig"><div class="ln"></div><div class="lb">Date</div></div>
-  </div>
-  <div class="ft">Mile Tracker &bull; ${userName}${userOrg?' &bull; '+userOrg:''} &bull; ${label}</div>
-  </body></html>`;
-  // Safari-safe: use blob URL instead of window.open
-  const blob = new Blob([html], {type:'text/html'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(()=> URL.revokeObjectURL(url), 5000);
-  showToast('Opening print dialog...');
+
+  const rows = mt.map(t=>{
+    const d=new Date(t.date+'T12:00:00'); const mi=parseFloat(t.miles||0), r=getRate(t);
+    return `<tr>
+      <td>${(d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear()}</td>
+      <td>${PL[t.purpose||'business']}</td>
+      <td>${t.from||''}</td>
+      <td>${t.to||''}</td>
+      <td>${t.notes||''}</td>
+      <td style="text-align:right">${mi.toFixed(1)}</td>
+      <td style="text-align:right">$${r.toFixed(3)}</td>
+      <td style="text-align:right;font-weight:700">$${(mi*r).toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('print-content').innerHTML = `
+    <div class="print-hdr">
+      <h1>Mileage Reimbursement Report</h1>
+      <div class="sub">2026 IRS Standard Mileage Rates &bull; Generated ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+    </div>
+    <div class="print-meta">
+      <div class="print-mi"><label>Employee</label><span>${userName}</span></div>
+      ${userOrg?`<div class="print-mi"><label>Organization</label><span>${userOrg}</span></div>`:''}
+      <div class="print-mi"><label>Period</label><span>${label}</span></div>
+      <div class="print-mi"><label>Total Trips</label><span>${mt.length}</span></div>
+      <div class="print-mi"><label>Total Miles</label><span>${totMi.toFixed(1)}</span></div>
+      <div class="print-mi"><label>Reimbursement</label><span style="color:#6B2D0F">$${totVal.toFixed(2)}</span></div>
+    </div>
+    <table class="print-table">
+      <thead><tr>
+        <th>Date</th><th>Purpose</th><th>From</th><th>To</th><th>Notes / Client</th>
+        <th style="text-align:right">Miles</th><th style="text-align:right">Rate</th><th style="text-align:right">Amount</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="print-tot">
+      <span>${mt.length} trips &bull; 2026 IRS Rates</span>
+      <span>${totMi.toFixed(1)} mi &bull; $${totVal.toFixed(2)}</span>
+    </div>
+    <div class="print-sigs">
+      <div class="print-sig"><div class="ln"></div><div class="lb">Employee Signature</div></div>
+      <div class="print-sig"><div class="ln"></div><div class="lb">Supervisor Approval</div></div>
+      <div class="print-sig"><div class="ln"></div><div class="lb">Date</div></div>
+    </div>
+    <div class="print-ft">Mile Tracker &bull; ${userName}${userOrg?' &bull; '+userOrg:''} &bull; ${label}</div>
+  `;
+  document.getElementById('print-overlay').classList.add('open');
+  window.scrollTo(0,0);
+}
+
+function closePrintOverlay(){
+  document.getElementById('print-overlay').classList.remove('open');
 }
 
 // ============================================================
