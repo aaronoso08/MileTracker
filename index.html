@@ -137,7 +137,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--sh-lg);z-index:100;
   max-height:220px;overflow-y:auto;display:none}
 .ac-drop.open{display:block}
-.ac-item{padding:13px 14px;cursor:pointer;font-size:.85rem;color:var(--text2);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;transition:background .1s;min-height:52px}
+.ac-item{padding:10px 14px;cursor:pointer;font-size:.83rem;color:var(--text2);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;transition:background .1s}
 .ac-item:last-child{border-bottom:none}
 .ac-item:hover,.ac-item.focused{background:var(--surface2)}
 .ac-item svg{width:13px;height:13px;flex-shrink:0;color:var(--text3);margin-top:2px}
@@ -182,12 +182,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .month-header::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* SETUP */
-.setup-screen{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
-.setup-card{background:var(--surface);border-radius:20px;padding:32px 28px;max-width:400px;width:100%;box-shadow:var(--sh-lg);text-align:center}
-.setup-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--brand-light));
-  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff}
-.setup-title{font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:6px}
-.setup-sub{font-size:.83rem;color:var(--text3);margin-bottom:24px;line-height:1.5}
+
 
 /* TOAST */
 .toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px);
@@ -205,26 +200,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </head>
 <body>
 
-<!-- SETUP -->
-<div class="setup-screen" id="setup-screen">
-  <div class="setup-card">
-    <div class="setup-logo">
-      <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5 18 1 16 1 14.5 2.5L11 6 2.8 4.2l-2.3 2.3 5.1 5.1L3.5 14l-1 3.5L6 17l1.5 1.5 3.5-1 2.1-2.4 5.1 5.1 2.3-2.3z"/></svg>
-    </div>
-    <div class="setup-title">Mile Tracker</div>
-    <div class="setup-sub">Enter your name so your monthly reports are labeled correctly for submission.</div>
-    <div class="form-group" style="text-align:left">
-      <label class="form-label">Your Full Name</label>
-      <input type="text" class="form-input" id="setup-name" placeholder="e.g. Enter Name" style="font-size:1rem" onkeydown="if(event.key==='Enter')completeSetup()">
-    </div>
-    <div class="form-group" style="text-align:left">
-      <label class="form-label">Organization (optional)</label>
-      <input type="text" class="form-input" id="setup-org" placeholder="e.g. Latino Built" onkeydown="if(event.key==='Enter')completeSetup()">
-    </div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:.95rem;margin-top:4px" onclick="completeSetup()">Get Started</button>
-  </div>
-</div>
-
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-brand">
@@ -233,7 +208,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div>
       <div class="topbar-title">Mile Tracker</div>
-      <div class="topbar-sub" id="topbar-sub">Loading...</div>
     </div>
   </div>
   <div class="topbar-actions">
@@ -401,14 +375,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="modal-handle"></div>
     <div class="modal-title">Settings</div>
     <div class="form-group">
-      <label class="form-label">Your Full Name</label>
-      <input type="text" class="form-input" id="s-name">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Organization</label>
-      <input type="text" class="form-input" id="s-org">
-    </div>
-    <div class="form-group">
       <label class="form-label">Saved Addresses
         <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> — tap X to remove</span>
       </label>
@@ -461,8 +427,7 @@ const PL     = {business:'Business',medical:'Medical',charity:'Charity',other:'O
 // ============================================================
 let trips      = JSON.parse(localStorage.getItem('mt_trips')      || '[]');
 let savedLocs  = JSON.parse(localStorage.getItem('mt_saved_locs') || '[]');
-let userName   = localStorage.getItem('mt_name') || '';
-let userOrg    = localStorage.getItem('mt_org')  || '';
+
 let editId     = null;
 let curPurpose = 'business';
 let activeFilter = 'all';
@@ -478,40 +443,19 @@ const acState = {
 // INIT
 // ============================================================
 function init(){
-  if(!userName){
-    document.getElementById('setup-screen').style.display = 'flex';
-  } else {
-    document.getElementById('setup-screen').style.display = 'none';
-    loadApp();
-  }
-}
-
-function completeSetup(){
-  const n = document.getElementById('setup-name').value.trim();
-  if(!n){ showToast('Please enter your name'); return; }
-  userName = n;
-  userOrg  = document.getElementById('setup-org').value.trim();
-  localStorage.setItem('mt_name', userName);
-  localStorage.setItem('mt_org',  userOrg);
-  document.getElementById('setup-screen').style.display = 'none';
   loadApp();
 }
 
 function loadApp(){
   const now = new Date();
-  document.getElementById('topbar-sub').textContent =
-    userName + ' \u2022 ' + MONTHS[now.getMonth()] + ' ' + now.getFullYear();
   document.getElementById('f-date').value = now.toISOString().slice(0,10);
   updateStats();
   renderList();
   renderSavedChips();
-  // Close dropdowns on outside click/touch — delay so tap-to-select fires first
+  // Close dropdowns on outside click
   document.addEventListener('click', e => {
     if(!e.target.closest('.ac-wrap')){ closeAc('from'); closeAc('to'); }
   });
-  document.addEventListener('touchstart', e => {
-    if(!e.target.closest('.ac-wrap')){ setTimeout(()=>{ closeAc('from'); closeAc('to'); }, 200); }
-  }, {passive:true});
 }
 
 // ============================================================
@@ -520,21 +464,9 @@ function loadApp(){
 // OSRM for driving distance
 // ============================================================
 async function nominatimSearch(query){
-  // viewbox biases results toward Oregon/SW Washington — still searches all US but prioritizes this region
-  const viewbox = '-124.5,41.9,-116.4,46.3';
-  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=us&limit=7&addressdetails=1&viewbox=${viewbox}&bounded=0`;
-  const res = await fetch(url, { headers:{ 'Accept-Language':'en', 'User-Agent':'MileTracker/1.0' } });
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=us&limit=6&addressdetails=1`;
+  const res = await fetch(url, { headers:{ 'Accept-Language':'en' } });
   return res.json();
-}
-
-function formatAddress(r){
-  const a = r.address || {};
-  const parts = [];
-  if(a.house_number && a.road) parts.push(a.house_number + ' ' + a.road);
-  else if(a.road) parts.push(a.road);
-  if(a.city || a.town || a.village || a.suburb) parts.push(a.city || a.town || a.village || a.suburb);
-  if(a.state) parts.push(a.state);
-  return parts.length ? parts.join(', ') : r.display_name.split(',').slice(0,3).join(',').trim();
 }
 
 async function osrmRoute(fromCoords, toCoords){
@@ -571,9 +503,10 @@ function acSearch(field, val){
         return;
       }
       drop.innerHTML = results.map((r,i) => {
-        const main = formatAddress(r);
-        const sub  = r.display_name.split(',').slice(-3).join(',').trim();
-        return `<div class="ac-item" data-idx="${i}" ontouchstart="acPick('${field}',${i})" onclick="acPick('${field}',${i})">
+        const parts = r.display_name.split(',');
+        const main = parts.slice(0,2).join(',').trim();
+        const sub  = parts.slice(2).join(',').trim();
+        return `<div class="ac-item" data-idx="${i}" onmousedown="acPick('${field}',${i})">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <div class="ac-item-text"><div class="ac-item-main">${main}</div><div class="ac-item-sub">${sub}</div></div>
         </div>`;
@@ -588,9 +521,10 @@ function acPick(field, idx){
   const r = acState[field].results[idx];
   if(!r) return;
   acState[field].coords = { lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
-  document.getElementById('f-' + field).value = formatAddress(r);
+  document.getElementById('f-' + field).value = r.display_name.split(',').slice(0,4).join(',').trim();
   closeAc(field);
-  setTimeout(() => maybCalcDist(), 150);
+  // Auto-calc distance if both sides have coords
+  setTimeout(() => maybCalcDist(), 100);
 }
 
 function acKeydown(e, field){
@@ -881,19 +815,11 @@ function quickFill(loc){
 // SETTINGS
 // ============================================================
 function openSettings(){
-  document.getElementById('s-name').value = userName;
-  document.getElementById('s-org').value  = userOrg;
   renderSettingsSaved();
   document.getElementById('settings-overlay').classList.add('open');
 }
 function closeSettings(){ document.getElementById('settings-overlay').classList.remove('open'); }
 function saveSettings(){
-  const n = document.getElementById('s-name').value.trim();
-  if(!n){ showToast('Name is required'); return; }
-  userName = n; userOrg = document.getElementById('s-org').value.trim();
-  localStorage.setItem('mt_name', userName); localStorage.setItem('mt_org', userOrg);
-  const now = new Date();
-  document.getElementById('topbar-sub').textContent = userName + ' \u2022 ' + MONTHS[now.getMonth()] + ' ' + now.getFullYear();
   closeSettings(); showToast('Settings saved');
 }
 function renderSettingsSaved(){
@@ -950,9 +876,7 @@ function renderReportBody(){
   const el = document.getElementById('report-body');
   if(!mt.length){ el.innerHTML=`<div class="empty" style="padding:24px"><h3>No trips for ${label}</h3></div>`; return; }
   el.innerHTML = `
-    <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.8rem">
-      <strong>${userName}</strong>${userOrg?' &bull; '+userOrg:''} &bull; ${label}
-    </div>
+
     <table class="report-table">
       <thead><tr><th>Date</th><th>Purpose</th><th>From</th><th>To</th><th>Notes</th><th style="text-align:right">Miles</th><th style="text-align:right">Rate</th><th style="text-align:right">Amount</th></tr></thead>
       <tbody>${mt.map(t=>{
@@ -979,11 +903,11 @@ function downloadCSV(){
   const [yr,mo] = activeMonth.split('-');
   const month=parseInt(mo)-1, year=parseInt(yr);
   const mt = trips.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===month&&d.getFullYear()===year;}).sort((a,b)=>a.date.localeCompare(b.date));
-  const rows=[['Name','Organization','Date','Purpose','From','To','Notes / Client','Miles','Rate ($/mi)','Amount ($)']];
-  mt.forEach(t=>{const mi=parseFloat(t.miles||0),r=getRate(t);rows.push([userName,userOrg,t.date,PL[t.purpose||'business'],t.from||'',t.to||'',t.notes||'',mi.toFixed(1),r.toFixed(3),(mi*r).toFixed(2)]);});
+  const rows=[['Date','Purpose','From','To','Notes / Client','Miles','Rate ($/mi)','Amount ($)']];
+  mt.forEach(t=>{const mi=parseFloat(t.miles||0),r=getRate(t);rows.push([t.date,PL[t.purpose||'business'],t.from||'',t.to||'',t.notes||'',mi.toFixed(1),r.toFixed(3),(mi*r).toFixed(2)]);});
   const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download=`MileTracker_${userName.replace(/\s+/g,'_')}_${MONTHS[month]}_${year}.csv`; a.click();
+  a.download=`MileTracker_${MONTHS[month]}_${year}.csv`; a.click();
 }
 
 // ============================================================
@@ -1015,8 +939,6 @@ function printReport(){
   </style></head><body>
   <div class="hdr"><h1>Mileage Reimbursement Report</h1><div class="sub">2026 IRS Standard Mileage Rates &bull; Generated ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div></div>
   <div class="meta">
-    <div class="mi"><label>Employee</label><span>${userName}</span></div>
-    ${userOrg?`<div class="mi"><label>Organization</label><span>${userOrg}</span></div>`:''}
     <div class="mi"><label>Period</label><span>${label}</span></div>
     <div class="mi"><label>Total Trips</label><span>${mt.length}</span></div>
     <div class="mi"><label>Total Miles</label><span>${totMi.toFixed(1)}</span></div>
@@ -1032,7 +954,7 @@ function printReport(){
     <div class="sig"><div class="ln"></div><div class="lb">Supervisor Approval</div></div>
     <div class="sig"><div class="ln"></div><div class="lb">Date</div></div>
   </div>
-  <div class="ft">Mile Tracker &bull; ${userName}${userOrg?' &bull; '+userOrg:''} &bull; ${label}</div>
+  <div class="ft">Mile Tracker &bull; ${label}</div>
   <script>window.onload=function(){window.print()}<\/script></body></html>`);
   pw.document.close();
 }
