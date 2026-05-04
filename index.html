@@ -394,11 +394,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap">
       <div class="modal-title" style="margin:0" id="report-title">Monthly Report</div>
       <div style="display:flex;gap:6px">
-        <button class="btn btn-outline btn-sm" onclick="downloadCSV()">
+        <button class="btn btn-outline btn-sm" onclick="openDownloadModal('csv')">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           CSV
         </button>
-        <button class="btn btn-primary btn-sm" onclick="printReport()">
+        <button class="btn btn-primary btn-sm" onclick="openDownloadModal('pdf')">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           Print / PDF
         </button>
@@ -409,6 +409,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="modal-footer"><button class="btn btn-outline" onclick="closeReport()">Close</button></div>
   </div>
 </div>
+
+
+<!-- DOWNLOAD INFO MODAL -->
+<div class="overlay" id="download-overlay" onclick="if(event.target.id==='download-overlay')closeDownloadModal()">
+  <div class="modal" style="max-height:70vh">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="dl-modal-title">Download Report</div>
+    <p style="font-size:.82rem;color:var(--text3);margin-bottom:16px;margin-top:-10px">This info will appear on your report.</p>
+    <div class="form-group">
+      <label class="form-label">Your Full Name <span style="color:var(--red)">*</span></label>
+      <input type="text" class="form-input" id="dl-name" placeholder="e.g. Maria Garcia" style="font-size:1rem">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Organization</label>
+      <input type="text" class="form-input" id="dl-org" placeholder="e.g. Latino Built">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeDownloadModal()">Cancel</button>
+      <button class="btn btn-primary" id="dl-confirm-btn" onclick="confirmDownload()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PRINT FRAME - Safari safe, no window.open -->
+<iframe id="print-frame" style="display:none"></iframe>
 
 <div class="toast" id="toast"></div>
 
@@ -897,30 +925,62 @@ function renderReportBody(){
 }
 
 // ============================================================
-// CSV DOWNLOAD
+// DOWNLOAD MODAL
 // ============================================================
-function downloadCSV(){
-  const [yr,mo] = activeMonth.split('-');
-  const month=parseInt(mo)-1, year=parseInt(yr);
-  const mt = trips.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===month&&d.getFullYear()===year;}).sort((a,b)=>a.date.localeCompare(b.date));
-  const rows=[['Date','Purpose','From','To','Notes / Client','Miles','Rate ($/mi)','Amount ($)']];
-  mt.forEach(t=>{const mi=parseFloat(t.miles||0),r=getRate(t);rows.push([t.date,PL[t.purpose||'business'],t.from||'',t.to||'',t.notes||'',mi.toFixed(1),r.toFixed(3),(mi*r).toFixed(2)]);});
-  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download=`MileTracker_${MONTHS[month]}_${year}.csv`; a.click();
+let dlType = 'pdf';
+
+function openDownloadModal(type){
+  dlType = type;
+  document.getElementById('dl-modal-title').textContent = type === 'pdf' ? 'Print / Save as PDF' : 'Download CSV';
+  document.getElementById('dl-confirm-btn').innerHTML = type === 'pdf'
+    ? '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print / PDF'
+    : '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download CSV';
+  // Pre-fill if saved
+  document.getElementById('dl-name').value = localStorage.getItem('dl_name') || '';
+  document.getElementById('dl-org').value  = localStorage.getItem('dl_org')  || '';
+  document.getElementById('download-overlay').classList.add('open');
+}
+
+function closeDownloadModal(){
+  document.getElementById('download-overlay').classList.remove('open');
+}
+
+function confirmDownload(){
+  const name = document.getElementById('dl-name').value.trim();
+  if(!name){ showToast('Please enter your name'); return; }
+  const org = document.getElementById('dl-org').value.trim();
+  // Save for next time
+  localStorage.setItem('dl_name', name);
+  localStorage.setItem('dl_org',  org);
+  closeDownloadModal();
+  if(dlType === 'pdf') printReport(name, org);
+  else downloadCSV(name, org);
 }
 
 // ============================================================
-// PRINT
+// CSV DOWNLOAD
 // ============================================================
-function printReport(){
+function downloadCSV(userName, userOrg){
+  const [yr,mo] = activeMonth.split('-');
+  const month=parseInt(mo)-1, year=parseInt(yr);
+  const mt = trips.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===month&&d.getFullYear()===year;}).sort((a,b)=>a.date.localeCompare(b.date));
+  const rows=[['Name','Organization','Date','Purpose','From','To','Notes / Client','Miles','Rate ($/mi)','Amount ($)']];
+  mt.forEach(t=>{const mi=parseFloat(t.miles||0),r=getRate(t);rows.push([userName,userOrg,t.date,PL[t.purpose||'business'],t.from||'',t.to||'',t.notes||'',mi.toFixed(1),r.toFixed(3),(mi*r).toFixed(2)]);});
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`MileTracker_${userName.replace(/\s+/g,'_')}_${MONTHS[month]}_${year}.csv`; a.click();
+}
+
+// ============================================================
+// PRINT (Safari-safe via iframe)
+// ============================================================
+function printReport(userName, userOrg){
   const [yr,mo]=activeMonth.split('-');
   const month=parseInt(mo)-1,year=parseInt(yr),label=MONTHS[month]+' '+year;
   const mt=trips.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===month&&d.getFullYear()===year;}).sort((a,b)=>a.date.localeCompare(b.date));
   const totMi=mt.reduce((s,t)=>s+parseFloat(t.miles||0),0);
   const totVal=mt.reduce((s,t)=>s+parseFloat(t.miles||0)*getRate(t),0);
-  const pw=window.open('','_blank');
-  pw.document.write(`<!DOCTYPE html><html><head><title>${userName} Mileage ${label}</title>
+  const html = `<!DOCTYPE html><html><head><title>${userName} - Mileage ${label}</title>
   <style>
     @page{margin:.75in}body{font-family:Arial,sans-serif;color:#1C1209;font-size:12px}
     .hdr{border-bottom:3px solid #6B2D0F;padding-bottom:14px;margin-bottom:20px}
@@ -939,6 +999,8 @@ function printReport(){
   </style></head><body>
   <div class="hdr"><h1>Mileage Reimbursement Report</h1><div class="sub">2026 IRS Standard Mileage Rates &bull; Generated ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div></div>
   <div class="meta">
+    <div class="mi"><label>Employee</label><span>${userName}</span></div>
+    ${userOrg?`<div class="mi"><label>Organization</label><span>${userOrg}</span></div>`:''}
     <div class="mi"><label>Period</label><span>${label}</span></div>
     <div class="mi"><label>Total Trips</label><span>${mt.length}</span></div>
     <div class="mi"><label>Total Miles</label><span>${totMi.toFixed(1)}</span></div>
@@ -954,9 +1016,20 @@ function printReport(){
     <div class="sig"><div class="ln"></div><div class="lb">Supervisor Approval</div></div>
     <div class="sig"><div class="ln"></div><div class="lb">Date</div></div>
   </div>
-  <div class="ft">Mile Tracker &bull; ${label}</div>
-  <script>window.onload=function(){window.print()}<\/script></body></html>`);
-  pw.document.close();
+  <div class="ft">Mile Tracker &bull; ${userName}${userOrg?' &bull; '+userOrg:''} &bull; ${label}</div>
+  </body></html>`;
+  // Safari-safe: use blob URL instead of window.open
+  const blob = new Blob([html], {type:'text/html'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=> URL.revokeObjectURL(url), 5000);
+  showToast('Opening print dialog...');
 }
 
 // ============================================================
