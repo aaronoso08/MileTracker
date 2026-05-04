@@ -137,7 +137,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--sh-lg);z-index:100;
   max-height:220px;overflow-y:auto;display:none}
 .ac-drop.open{display:block}
-.ac-item{padding:10px 14px;cursor:pointer;font-size:.83rem;color:var(--text2);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;transition:background .1s}
+.ac-item{padding:13px 14px;cursor:pointer;font-size:.85rem;color:var(--text2);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;transition:background .1s;min-height:52px}
 .ac-item:last-child{border-bottom:none}
 .ac-item:hover,.ac-item.focused{background:var(--surface2)}
 .ac-item svg{width:13px;height:13px;flex-shrink:0;color:var(--text3);margin-top:2px}
@@ -215,7 +215,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="setup-sub">Enter your name so your monthly reports are labeled correctly for submission.</div>
     <div class="form-group" style="text-align:left">
       <label class="form-label">Your Full Name</label>
-      <input type="text" class="form-input" id="setup-name" placeholder="e.g. Type name" style="font-size:1rem" onkeydown="if(event.key==='Enter')completeSetup()">
+      <input type="text" class="form-input" id="setup-name" placeholder="e.g. Enter Name" style="font-size:1rem" onkeydown="if(event.key==='Enter')completeSetup()">
     </div>
     <div class="form-group" style="text-align:left">
       <label class="form-label">Organization (optional)</label>
@@ -505,10 +505,13 @@ function loadApp(){
   updateStats();
   renderList();
   renderSavedChips();
-  // Close dropdowns on outside click
+  // Close dropdowns on outside click/touch — delay so tap-to-select fires first
   document.addEventListener('click', e => {
     if(!e.target.closest('.ac-wrap')){ closeAc('from'); closeAc('to'); }
   });
+  document.addEventListener('touchstart', e => {
+    if(!e.target.closest('.ac-wrap')){ setTimeout(()=>{ closeAc('from'); closeAc('to'); }, 200); }
+  }, {passive:true});
 }
 
 // ============================================================
@@ -517,9 +520,21 @@ function loadApp(){
 // OSRM for driving distance
 // ============================================================
 async function nominatimSearch(query){
-  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=us&limit=6&addressdetails=1`;
-  const res = await fetch(url, { headers:{ 'Accept-Language':'en' } });
+  // viewbox biases results toward Oregon/SW Washington — still searches all US but prioritizes this region
+  const viewbox = '-124.5,41.9,-116.4,46.3';
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=us&limit=7&addressdetails=1&viewbox=${viewbox}&bounded=0`;
+  const res = await fetch(url, { headers:{ 'Accept-Language':'en', 'User-Agent':'MileTracker/1.0' } });
   return res.json();
+}
+
+function formatAddress(r){
+  const a = r.address || {};
+  const parts = [];
+  if(a.house_number && a.road) parts.push(a.house_number + ' ' + a.road);
+  else if(a.road) parts.push(a.road);
+  if(a.city || a.town || a.village || a.suburb) parts.push(a.city || a.town || a.village || a.suburb);
+  if(a.state) parts.push(a.state);
+  return parts.length ? parts.join(', ') : r.display_name.split(',').slice(0,3).join(',').trim();
 }
 
 async function osrmRoute(fromCoords, toCoords){
@@ -556,10 +571,9 @@ function acSearch(field, val){
         return;
       }
       drop.innerHTML = results.map((r,i) => {
-        const parts = r.display_name.split(',');
-        const main = parts.slice(0,2).join(',').trim();
-        const sub  = parts.slice(2).join(',').trim();
-        return `<div class="ac-item" data-idx="${i}" onmousedown="acPick('${field}',${i})">
+        const main = formatAddress(r);
+        const sub  = r.display_name.split(',').slice(-3).join(',').trim();
+        return `<div class="ac-item" data-idx="${i}" ontouchstart="acPick('${field}',${i})" onclick="acPick('${field}',${i})">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <div class="ac-item-text"><div class="ac-item-main">${main}</div><div class="ac-item-sub">${sub}</div></div>
         </div>`;
@@ -574,10 +588,9 @@ function acPick(field, idx){
   const r = acState[field].results[idx];
   if(!r) return;
   acState[field].coords = { lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
-  document.getElementById('f-' + field).value = r.display_name.split(',').slice(0,4).join(',').trim();
+  document.getElementById('f-' + field).value = formatAddress(r);
   closeAc(field);
-  // Auto-calc distance if both sides have coords
-  setTimeout(() => maybCalcDist(), 100);
+  setTimeout(() => maybCalcDist(), 150);
 }
 
 function acKeydown(e, field){
