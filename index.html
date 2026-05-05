@@ -77,13 +77,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   padding:12px 14px;display:flex;align-items:center;gap:12px;transition:all .18s;position:relative;overflow:hidden}
 .trip-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
 .trip-row.purpose-business::before{background:var(--accent)}
-.trip-row.purpose-medical::before{background:var(--blue)}
-.trip-row.purpose-charity::before{background:var(--green)}
+.trip-row.purpose-personal::before{background:var(--blue)}
 .trip-row.purpose-other::before{background:var(--gray)}
 .trip-row:hover{border-color:var(--accent);box-shadow:var(--sh)}
 .date-badge{width:50px;min-width:50px;height:54px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
-.db-purpose-business{background:var(--accent)}.db-purpose-medical{background:var(--blue)}
-.db-purpose-charity{background:var(--green)}.db-purpose-other{background:var(--gray)}
+.db-purpose-business{background:var(--accent)}.db-purpose-personal{background:var(--blue)}
+.db-purpose-other{background:var(--gray)}
 .db-mon{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
 .db-day{font-size:1.35rem;font-weight:800;line-height:1}
 .trip-info{flex:1;min-width:0}
@@ -94,8 +93,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .miles-badge{font-family:'DM Mono',monospace;font-weight:500;font-size:.85rem;color:var(--brand);
   background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;white-space:nowrap}
 .badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:99px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.badge-business{background:var(--yellow-bg);color:var(--yellow-dark)}.badge-medical{background:var(--blue-bg);color:var(--blue)}
-.badge-charity{background:var(--green-bg);color:var(--green-dark)}.badge-other{background:var(--gray-bg);color:var(--gray)}
+.badge-business{background:var(--yellow-bg);color:var(--yellow-dark)}.badge-personal{background:var(--blue-bg);color:var(--blue)}
+.badge-other{background:var(--gray-bg);color:var(--gray)}
 
 /* FAB */
 .fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;
@@ -120,14 +119,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
 /* PURPOSE BUTTONS */
-.purpose-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.purpose-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:420px){.purpose-grid{grid-template-columns:1fr 1fr}}
 .purpose-btn{padding:11px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);
   cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:600;color:var(--text2);
   display:flex;align-items:center;gap:8px;transition:all .15s;text-align:left}
 .purpose-btn:hover{border-color:var(--accent)}
 .purpose-btn.sel-business{background:var(--yellow-bg);border-color:var(--yellow);color:var(--yellow-dark)}
-.purpose-btn.sel-medical{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
-.purpose-btn.sel-charity{background:var(--green-bg);border-color:var(--green);color:var(--green-dark)}
+.purpose-btn.sel-personal{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
 .purpose-btn.sel-other{background:var(--gray-bg);border-color:var(--gray);color:var(--gray)}
 .purpose-btn svg{width:15px;height:15px;flex-shrink:0}
 
@@ -223,9 +222,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .print-table td{padding:7px 8px;border-bottom:1px solid #E8DDD4;color:#5C4033}
 .print-table tr:nth-child(even) td{background:#FDF8F4}
 .print-tot{background:#6B2D0F;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;font-weight:700;font-size:13px;border-radius:6px;margin-top:8px;font-family:Arial,sans-serif}
-.print-sigs{margin-top:40px;display:flex;gap:40px}
-.print-sig{flex:1}.print-sig .ln{border-bottom:1px solid #1C1209;height:30px;margin-bottom:4px}
-.print-sig .lb{font-size:10px;color:#9C7B6B;text-transform:uppercase;letter-spacing:.04em;font-family:Arial,sans-serif}
 .print-ft{margin-top:24px;font-size:10px;color:#9C7B6B;border-top:1px solid #E8DDD4;padding-top:10px;text-align:center;font-family:Arial,sans-serif}
 @media print{
   .print-toolbar{display:none!important}
@@ -299,8 +295,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="pills">
       <button class="pill active" onclick="filterPurpose('all',this)">All</button>
       <button class="pill" onclick="filterPurpose('business',this)">Business</button>
-      <button class="pill" onclick="filterPurpose('medical',this)">Medical</button>
-      <button class="pill" onclick="filterPurpose('charity',this)">Charity</button>
+      <button class="pill" onclick="filterPurpose('personal',this)">Personal</button>
     </div>
   </div>
   <div id="trip-list-container"></div>
@@ -319,7 +314,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
     <div class="info-banner">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>2026 IRS rates: <strong>Business 72.5¢</strong> &bull; Medical 20.5¢ &bull; Charity 14¢ per mile</span>
+      <span>2026 IRS rate: <strong>Business 72.5¢</strong> per mile</span>
     </div>
 
     <div class="form-group">
@@ -329,13 +324,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
           <div><div>Business</div><div style="font-size:.68rem;opacity:.75">72.5¢ / mile</div></div>
         </button>
-        <button class="purpose-btn" id="pb-medical" onclick="selectPurpose('medical')">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          <div><div>Medical</div><div style="font-size:.68rem;opacity:.75">20.5¢ / mile</div></div>
-        </button>
-        <button class="purpose-btn" id="pb-charity" onclick="selectPurpose('charity')">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <div><div>Charity</div><div style="font-size:.68rem;opacity:.75">14¢ / mile</div></div>
+        <button class="purpose-btn" id="pb-personal" onclick="selectPurpose('personal')">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div><div>Personal</div><div style="font-size:.68rem;opacity:.75">72.5¢ / mile</div></div>
         </button>
         <button class="purpose-btn" id="pb-other" onclick="selectPurpose('other')">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -357,7 +348,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
     <!-- FROM with autocomplete -->
     <div class="form-group">
-      <label class="form-label">From - Start Address</label>
+      <label class="form-label">From - Start Address <span id="hb-label-hint" style="font-weight:400;font-size:.68rem;color:var(--green);text-transform:none;letter-spacing:0;display:none">&#x2713; Home Base</span></label>
       <div class="ac-wrap">
         <input type="text" class="form-input" id="f-from" placeholder="Start typing address..." autocomplete="off"
           oninput="acSearch('from',this.value)" onkeydown="acKeydown(event,'from')">
@@ -428,11 +419,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="modal" style="max-height:75vh">
     <div class="modal-handle"></div>
     <div class="modal-title">Settings</div>
+
+    <!-- HOME BASE -->
+    <div class="form-group">
+      <label class="form-label">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home Base / Starting Address
+        <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> — auto-fills From on every new trip</span>
+      </label>
+      <div style="display:flex;gap:8px">
+        <input type="text" class="form-input" id="settings-home-base" placeholder="e.g. 8548 SW Apple Way, Portland, OR 97225" style="flex:1;font-size:.85rem">
+        <button class="btn btn-outline btn-sm" onclick="clearHomeBase()" title="Clear home base" style="flex-shrink:0;color:var(--red);border-color:var(--red)">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </button>
+      </div>
+      <div id="home-base-status" style="font-size:.72rem;color:var(--green);margin-top:5px;min-height:16px"></div>
+    </div>
+
     <div class="form-group">
       <label class="form-label">Saved Addresses
         <span style="font-weight:400;font-size:.68rem;color:var(--text3);text-transform:none;letter-spacing:0"> — tap X to remove</span>
       </label>
-      <div id="settings-saved-list" style="display:flex;flex-direction:column;gap:5px;margin-top:4px;max-height:180px;overflow-y:auto"></div>
+      <div id="settings-saved-list" style="display:flex;flex-direction:column;gap:5px;margin-top:4px;max-height:160px;overflow-y:auto"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeSettings()">Cancel</button>
@@ -519,17 +527,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 // ============================================================
 // CONFIG
 // ============================================================
-const IRS_RATES = { business:0.725, medical:0.205, charity:0.14, other:0.725 };
+const IRS_RATES = { business:0.725, personal:0.725, other:0.725 };
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONS   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const PL     = {business:'Business',medical:'Medical',charity:'Charity',other:'Other'};
+const PL     = {business:'Business',personal:'Personal',other:'Other'};
 
 // ============================================================
 // STATE
 // ============================================================
 let trips      = JSON.parse(localStorage.getItem('mt_trips')      || '[]');
 let savedLocs  = JSON.parse(localStorage.getItem('mt_saved_locs') || '[]');
+let homeBase   = localStorage.getItem('mt_home_base');
+if(homeBase === null){
+  homeBase = '8548 SW Apple Way, Portland, OR 97225';
+  localStorage.setItem('mt_home_base', homeBase);
+}
 
 let editId     = null;
 let curPurpose = 'business';
@@ -829,9 +842,18 @@ function openModal(trip){
   closeAc('from'); closeAc('to');
   selectPurpose('business');
 
+  // Auto-fill home base as starting address for new trips
+  if(homeBase){
+    document.getElementById('f-from').value = homeBase;
+    document.getElementById('hb-label-hint').style.display = 'inline';
+  } else {
+    document.getElementById('hb-label-hint').style.display = 'none';
+  }
+
   if(trip){
     editId = trip.id;
     document.getElementById('modal-title').textContent = 'Edit Trip';
+    document.getElementById('hb-label-hint').style.display = 'none';
     document.getElementById('f-date').value   = trip.date;
     document.getElementById('f-miles').value  = trip.miles;
     document.getElementById('f-from').value   = trip.from  || '';
@@ -841,7 +863,7 @@ function openModal(trip){
     if(trip.fromCoords) acState.from.coords = trip.fromCoords;
     if(trip.toCoords)   acState.to.coords   = trip.toCoords;
     if(trip.roundTrip){ isRoundTrip = true; document.getElementById('rt-toggle').classList.add('active'); document.getElementById('rt-badge').style.display = 'inline'; }
-    selectPurpose(trip.purpose || 'business');
+    selectPurpose(['business','personal','other'].includes(trip.purpose) ? trip.purpose : 'business');
   }
   renderSavedChips();
   document.getElementById('add-overlay').classList.add('open');
@@ -851,7 +873,7 @@ function closeModal(){ document.getElementById('add-overlay').classList.remove('
 
 function selectPurpose(p){
   curPurpose = p;
-  ['business','medical','charity','other'].forEach(x =>
+  ['business','personal','other'].forEach(x =>
     document.getElementById('pb-'+x).className = 'purpose-btn' + (x===p ? ' sel-'+x : ''));
   document.getElementById('custom-rate-group').style.display = p==='other' ? 'block' : 'none';
 }
@@ -941,12 +963,22 @@ function quickFill(loc){
 // SETTINGS
 // ============================================================
 function openSettings(){
+  document.getElementById('settings-home-base').value = homeBase;
+  document.getElementById('home-base-status').textContent = homeBase ? 'Currently set — will auto-fill From on new trips.' : '';
   renderSettingsSaved();
   document.getElementById('settings-overlay').classList.add('open');
 }
 function closeSettings(){ document.getElementById('settings-overlay').classList.remove('open'); }
 function saveSettings(){
-  closeSettings(); showToast('Settings saved');
+  const hb = document.getElementById('settings-home-base').value.trim();
+  homeBase = hb;
+  localStorage.setItem('mt_home_base', hb);
+  closeSettings();
+  showToast(hb ? 'Home base saved!' : 'Settings saved');
+}
+function clearHomeBase(){
+  document.getElementById('settings-home-base').value = '';
+  document.getElementById('home-base-status').textContent = '';
 }
 function renderSettingsSaved(){
   const el = document.getElementById('settings-saved-list');
@@ -1116,11 +1148,6 @@ function printReport(userName, userOrg){
     <div class="print-tot">
       <span>${mt.length} trips &bull; 2026 IRS Rates</span>
       <span>${totMi.toFixed(1)} mi &bull; $${totVal.toFixed(2)}</span>
-    </div>
-    <div class="print-sigs">
-      <div class="print-sig"><div class="ln"></div><div class="lb">Employee Signature</div></div>
-      <div class="print-sig"><div class="ln"></div><div class="lb">Supervisor Approval</div></div>
-      <div class="print-sig"><div class="ln"></div><div class="lb">Date</div></div>
     </div>
     <div class="print-ft">Mile Tracker &bull; ${userName}${userOrg?' &bull; '+userOrg:''} &bull; ${label}</div>
   `;
